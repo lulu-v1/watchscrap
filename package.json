@@ -5,5 +5,5 @@
     "fs-extra": "^11.2.0",
     "puppeteer": "^21.6.1"
   },
-  "type": "module"
+  "type": "commonjs"
 }

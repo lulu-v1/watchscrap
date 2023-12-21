@@ -1,4 +1,3 @@
-import getWatchModelsID from "./scripts/WatchModelID.js";
+const RetrieveInfos = require('./scripts/RetrieveInfos');
 
-getWatchModelsID();
-
+RetrieveInfos();
