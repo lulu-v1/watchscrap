@@ -2,6 +2,7 @@
   "name": "watchscrap",
   "version": "1.0.0",
   "dependencies": {
+    "fs-extra": "^11.2.0",
     "puppeteer": "^21.6.1"
   },
   "type": "module"
