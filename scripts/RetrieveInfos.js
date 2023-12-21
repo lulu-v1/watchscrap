@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const watchModelIDs = require('../data/watchModelIDs.json');
+const watchModelIDs = require('../data/watchModelsID.json');
 
 function sleep(number) {
     return new Promise(resolve => setTimeout(resolve, number));
@@ -22,6 +22,8 @@ async function RetrieveInfos() {
         await browser.close();
     }
 }
+
+module.exports = RetrieveInfos;
 
 module.exports = {
     RetrieveInfos: RetrieveInfos,
