@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const watchModelIDs = require('../data/watchModelIDs.json');
 
-async function sleep(number) {
+function sleep(number) {
     return new Promise(resolve => setTimeout(resolve, number));
 }
 
@@ -11,7 +11,8 @@ async function RetrieveInfos() {
 
     try {
         for (let i = 0; i < watchModelIDs.length; i++) {
-            const watchModelID = watchModelsID[i];
+            const watchModelID = watchModelIDs[i];
+            console.log(`Scraping watch model ID: ${watchModelID}`);
             await page.goto(`https://www.chrono24.fr/search/index.htm?countryIds=FR&currencyId=EUR&dosearch=true&manufacturerIds=221&maxAgeInDays=0&models=${watchModelID}&pageSize=60&redirectToSearchIndex=true&resultview=block&sortorder=0`);
             await sleep(1000);
         }
@@ -21,3 +22,8 @@ async function RetrieveInfos() {
         await browser.close();
     }
 }
+
+module.exports = {
+    RetrieveInfos: RetrieveInfos,
+    sleep: sleep
+};

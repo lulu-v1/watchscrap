@@ -1,3 +1,3 @@
-const RetrieveInfos = require('./scripts/RetrieveInfos');
+const scraperModule = require('./scripts/RetrieveInfos'); // Replace with your module path
 
-RetrieveInfos();
+scraperModule.RetrieveInfos();
