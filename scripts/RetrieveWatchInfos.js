@@ -3,24 +3,15 @@ function sleep(number) {
     return new Promise(resolve => setTimeout(resolve, number));
 }
 async function retrieveWatchInfos(page) {
+    await page.waitForSelector('.js-cookie-accept-all');
+    await page.click('.js-cookie-accept-all');
     await page.waitForSelector("#wt-watches");
     console.log("Selector found");
-    const currentWatchesOnPage = await page.evaluate(() => {
-        const watchesContainer = document.querySelector("#wt-watches");
-        console.log(watchesContainer.querySelectorAll("div"));
-        return watchesContainer.getElementsByTagName("div")
+    const linksOfCurrentWatchesOnPage = await page.$eval('div#wt-watches', (element) => {
+        // Inside the $eval, use evaluate to access the DOM element and return the result
+        return Array.from(element.querySelectorAll('a')).map(a => a.href);
     });
-    await sleep(10000);
-    await console.log( Array.from(currentWatchesOnPage).length);
-    await sleep(10000);
-    // for (let i = 0; i < Array.from(currentWatchesOnPage).length; i++) {
-    //     currentWatchesOnPage[i].click();
-    //     await page.waitForSelector(".col-xs-24.col-md-12");
-    //     const currentWatchInfos = await page.evaluate(() => {
-    //
-    //         return document.querySelector(".col-xs-24.col-md-12").innerText;
-    //     });
-    // }
+    await console.log(linksOfCurrentWatchesOnPage);
 }
 
 module.exports = retrieveWatchInfos;
