@@ -1,13 +1,13 @@
 const puppeteer = require('puppeteer');
 const watchModelIDs = require('../data/watchModelIDs.json');
-const retrieveWatchInfos = require('./RetrieveWatchInfos');
+const getWatchPagesURLs = require("./GetWatchPagesURLs");
 
 function sleep(number) {
     return new Promise(resolve => setTimeout(resolve, number));
 }
 
 async function CrawlOverModels() {
-    const browser = await puppeteer.launch({headless: true});
+    const browser = await puppeteer.launch({headless: false});
     const page = await browser.newPage();
     await page.goto('https://chrono24.fr/rolex/index.htm');
     await page.waitForSelector('.js-cookie-accept-all');
@@ -18,8 +18,11 @@ async function CrawlOverModels() {
         // for (let i = 1; i < watchModelIDs.length; i++) {
         const watchModelID = watchModelIDs[i].value;
         console.log(`Scraping watch model ID: ${watchModelID}`);
-        await page.goto(`https://www.chrono24.fr/search/index.htm?countryIds=FR&currencyId=EUR&dosearch=true&manufacturerIds=221&maxAgeInDays=0&models=${watchModelID}&pageSize=60&redirectToSearchIndex=true&resultview=block&sortorder=0`);
-        await retrieveWatchInfos(page)
+        // await page.goto(`https://www.chrono24.fr/search/index.htm?countryIds=FR&currencyId=EUR&dosearch=true&manufacturerIds=221&maxAgeInDays=0&models=${watchModelID}&pageSize=60&redirectToSearchIndex=true&resultview=block&sortorder=0`);
+        // await getWatchPagesURLs(page)
+        await page.goto('https://www.chrono24.fr/rolex/rolex-gmt-master-ii-batgirl-126710blnr--id31952231.htm');
+        const watchStats = await getWatchStats(page);
+        console.log(watchStats);
         await sleep(1000);
         // }
     } catch (error) {
