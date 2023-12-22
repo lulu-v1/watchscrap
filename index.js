@@ -1,3 +1,3 @@
-const scraperModule = require('./scripts/RetrieveInfos'); // Replace with your module path
+const scraperModule = require('./scripts/CrawlOverModels'); // Replace with your module path
 
-scraperModule.RetrieveInfos();
+scraperModule.CrawlOverModels();
