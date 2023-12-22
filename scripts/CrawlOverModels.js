@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const watchModelIDs = require('../data/watchModelIDs.json');
 const getWatchPagesURLs = require("./GetWatchPagesURLs");
+const getWatchStats = require("./getWatchStats");
 
 function sleep(number) {
     return new Promise(resolve => setTimeout(resolve, number));
@@ -18,11 +19,11 @@ async function CrawlOverModels() {
         // for (let i = 1; i < watchModelIDs.length; i++) {
         const watchModelID = watchModelIDs[i].value;
         console.log(`Scraping watch model ID: ${watchModelID}`);
-        // await page.goto(`https://www.chrono24.fr/search/index.htm?countryIds=FR&currencyId=EUR&dosearch=true&manufacturerIds=221&maxAgeInDays=0&models=${watchModelID}&pageSize=60&redirectToSearchIndex=true&resultview=block&sortorder=0`);
-        // await getWatchPagesURLs(page)
-        await page.goto('https://www.chrono24.fr/rolex/rolex-gmt-master-ii-batgirl-126710blnr--id31952231.htm');
-        const watchStats = await getWatchStats(page);
-        console.log(watchStats);
+        await page.goto(`https://www.chrono24.fr/search/index.htm?countryIds=FR&currencyId=EUR&dosearch=true&manufacturerIds=221&maxAgeInDays=0&models=${watchModelID}&pageSize=60&redirectToSearchIndex=true&resultview=block&sortorder=0`);
+        const watchPagesURLs = await getWatchPagesURLs(page)
+        await page.goto(watchPagesURLs[0]);
+        const watchObject = await getWatchStats(page);
+        console.log(watchObject);
         await sleep(1000);
         // }
     } catch (error) {

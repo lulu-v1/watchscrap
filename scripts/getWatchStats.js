@@ -1,11 +1,25 @@
-async function getWatchStats(page) {
-    await page.waitForSelector('.js-cookie-accept-all');
-    await page.click('.js-cookie-accept-all');
 
-    console.log("Selector found");
-    const linksOfCurrentWatchesOnPage = await page.$eval('div#wt-watches', (element) => {
+
+
+async function getWatchStats(page) {
+
+    await page.waitForSelector(".js-details-and-security-tabs");
+    return await page.$eval('.js-details-and-security-tabs', (element) => {
+        const watchStats = Array.from(element.querySelectorAll('tr')).map(a => a.innerText);
+        function createWatchObject(data) {
+            const watch = {};
+            let currentCategory = '';
+
+            data.forEach(item => {
+                const [key, ...values] = item.split('\t');
+                watch[key] = values.join(' ');
+            });
+
+            return watch;
+        }
         // Inside the $eval, use evaluate to access the DOM element and return the result
-        return Array.from(element.querySelectorAll('a')).map(a => a.href);
+        return watchStats;
     });
-    await console.log(linksOfCurrentWatchesOnPage);
 }
+
+module.exports = getWatchStats;
