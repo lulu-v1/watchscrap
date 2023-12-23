@@ -1,6 +1,6 @@
 // Colors reference
 // You can use the following as so:
-// console.log(colorCode, data);
+// console.log(colorCode, Info);
 // console.log(`${colorCode}some colorful text string${resetCode} rest of string in normal color`);
 //
 // ... and so on.
