@@ -1,17 +1,22 @@
 const {globalTableName} = require("../DbManagement/DbOpener");
 const sqlite3 = require("sqlite3");
 
-
 function RetrieveAllWatches() {
-    const db = new sqlite3.Database('../Database/db.sqlite');
+    const db = new sqlite3.Database('Database/db.sqlite');
+    const selectQuery = `
+        SELECT * FROM ${globalTableName}
+    `;
 
-    const Watches = db.all(`SELECT Name, Category FROM ${globalTableName}`, [], (err, rows) => {
+    const Watches = db.all(selectQuery, [], (err, rows) => {
         if (err) {
-            throw err;
+            console.error(err.message);
         }
-        return rows;
+        rows.forEach((row) => {
+            console.log(row);
+        });
     });
-    return db;
+    db.close();
+    return Watches;
 }
 
 module.exports = RetrieveAllWatches;
