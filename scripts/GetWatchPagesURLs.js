@@ -1,4 +1,3 @@
-const puppeteer = require('puppeteer');
 
 // Function to introduce a sleep/delay
 function sleep(number) {

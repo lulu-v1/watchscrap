@@ -1,7 +1,6 @@
-const { globalTableName } = require("../Database/initDB");
 const sqlite3 = require('sqlite3').verbose();
 const c = require("../Style/consoleColors.js");
-const insertWatch = require("../DbManagement/DbHandler")
+const dbHandler = require("../DbManagement/DbHandler")
 
 async function getWatchStats(page) {
     try {
@@ -24,7 +23,8 @@ async function getWatchStats(page) {
         });
         return watchData;
     });
-    insertWatch(watch)
+    watch["Lien"] = page.url();
+    dbHandler.insertWatch(watch)
 }
 
 module.exports = getWatchStats;

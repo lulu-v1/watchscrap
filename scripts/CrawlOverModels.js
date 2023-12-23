@@ -1,5 +1,4 @@
 const puppeteer = require('puppeteer');
-const watchModelIDs = require('../data/watchModelIDs.json');
 const getWatchPagesURLs = require("./GetWatchPagesURLs");
 const getWatchStats = require("./getWatchStats");
 const fs = require("fs-extra");

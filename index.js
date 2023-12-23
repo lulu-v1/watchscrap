@@ -1,10 +1,10 @@
 const crawlerModule = require('./scripts/CrawlOverModels'); // Replace with your module path
-const {sleep} = require("./scripts/CrawlOverModels"); // Replace with your module path
-const initDB = require('./Database/initDB'); // Replace with your module path
+const dbOpener = require('./DbManagement/DbOpener'); // Replace with your module path
 async function main() {
-    await initDB.ensureTableExists();
+    await dbOpener.openDB();
+    console.log("Starting the crawler");
     await crawlerModule.CrawlOverModels();
 }
 
-main();
+main().then(r => console.log("Crawling Done !")).catch(e => console.log(e));
 

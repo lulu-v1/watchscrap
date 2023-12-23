@@ -48,9 +48,9 @@ const openDB = () => {
     });
 };
 
-module.exports = openDB;
 
 module.exports = {
+    openDB: openDB,
     globalTableName: globalTableName,
     db: db,
 };
