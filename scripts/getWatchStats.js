@@ -2,7 +2,7 @@ const sqlite3 = require('sqlite3').verbose();
 
 async function getWatchStats(page) {
     try {
-        await page.waitForSelector(".js-details-and-security-tabs", {timeout: 4000});
+        await page.waitForSelector(".js-details-and-security-tabs", {timeout: 1000});
     }catch {
         return
     }

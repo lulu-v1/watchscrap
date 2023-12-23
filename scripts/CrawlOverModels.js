@@ -3,7 +3,6 @@ const watchModelIDs = require('../data/watchModelIDs.json');
 const getWatchPagesURLs = require("./GetWatchPagesURLs");
 const getWatchStats = require("./getWatchStats");
 const fs = require("fs-extra");
-const request = require('request');
 
 function sleep(number) {
     return new Promise(resolve => setTimeout(resolve, number));
@@ -17,7 +16,7 @@ async function CrawlOverModels() {
     await page.click('.js-cookie-accept-all');
     try {
         // for (let i = 1; i < watchModelIDs.length; i++) {
-        let pageNumberIndex = 1
+        let pageNumberIndex = 2
         let lastPageReached = false
         while (!lastPageReached) { //as long as we don't get a 404 error
             const pageNumber = `&showpage=${pageNumberIndex}`
@@ -42,9 +41,10 @@ async function CrawlOverModels() {
 
             await page.goto(currentUrl); //go to the current page
             
-            if (page.url().indexOf("/rolex/") !== -1) {
+            if (page.url().length < 41) {
                 lastPageReached = true //if the url doesn't contain /rolex/ it means that we reached the last page
                 console.log("Last page reached")
+                return
             }
 
             pageNumberIndex++ //increment the page number
@@ -54,7 +54,7 @@ async function CrawlOverModels() {
 
             const watchUrls = await getWatchPagesURLs(page) // Get all the watch pages URLs
 
-            for (let j = 0; j < watchUrls.length; j++) { // loop through all the watch pages
+            for (let j = 0;!lastPageReached && j < watchUrls.length; j++) { // loop through all the watch pages
                 console.log(`Scraping watch page: ${watchUrls[j]}`);
                 await page.goto(watchUrls[j]);
                 await getWatchStats(page);
