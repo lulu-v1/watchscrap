@@ -16,7 +16,7 @@ function ensureTableExists(){
     const createTable = () => {
         const createTableQuery = `
     CREATE TABLE IF NOT EXISTS ${globalTableName} (
-        Code_annonce TEXT PRIMARY KEY,
+        Code_annonce TEXT,
         Marque TEXT,
         Lien TEXT,
         Modele TEXT,
