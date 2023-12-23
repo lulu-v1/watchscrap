@@ -40,7 +40,7 @@ async function CrawlOverModels() {
 
 
             await page.goto(currentUrl); //go to the current page
-            
+
             if (page.url().length < 41) {
                 lastPageReached = true //if the url doesn't contain /rolex/ it means that we reached the last page
                 console.log("Last page reached")
@@ -49,17 +49,28 @@ async function CrawlOverModels() {
 
             pageNumberIndex++ //increment the page number
 
+
             //------------------------ Loop through all the watches pages ------------------------//
 
 
             const watchUrls = await getWatchPagesURLs(page) // Get all the watch pages URLs
 
-            for (let j = 0;!lastPageReached && j < watchUrls.length; j++) { // loop through all the watch pages
+            const promises = []; // Array to hold promises
+
+            for (let j = 0; !lastPageReached && j < watchUrls.length; j++) {
+                // loop through all the watch pages
                 console.log(`Scraping watch page: ${watchUrls[j]}`);
-                await page.goto(watchUrls[j]);
-                await getWatchStats(page);
-                console.log("Sleeping for 2 seconds")
+                const promise = (async () => {
+                    await page.goto(watchUrls[j]);
+                    await getWatchStats(page);
+                    console.log("Sleeping for 2 seconds");
+                })();
+                promises.push(promise); // Push the promise into the array
             }
+
+            Promise.all(promises)
+                .then(() => console.log("All promises resolved"))
+                .catch((err) => console.error("Error occurred:", err));
         }
         // }
 
