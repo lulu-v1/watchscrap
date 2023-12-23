@@ -1,3 +1,4 @@
+const {globalTableName} = require("./initDB");
 const sqlite3 = require('sqlite3').verbose();
 
 async function getWatchStats(page) {
@@ -34,7 +35,7 @@ async function getWatchStats(page) {
             console.log('Connected to the watches_database database.');
 
             const insertQuery = `
-                INSERT OR REPLACE INTO Watches (
+                INSERT OR REPLACE INTO ${globalTableName} (
                 Code_annonce, Marque, Lien, Modele, Numero_de_reference, Mouvement, Boitier, 
                 Matiere_du_bracelet, Annee_de_fabrication, Etat, Contenu_livre, Sexe, 
                 Emplacement, Prix, Disponibilite, Calibre_Rouages, Reserve_de_marche, 

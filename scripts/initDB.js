@@ -1,6 +1,6 @@
 const sqlite3 = require('sqlite3').verbose();
 
-
+let globalTableName = `Watches_${Date.now()}`;
 function ensureTableExists(){
 
 // Connect to SQLite database (creates a new one if it doesn't exist)
@@ -14,7 +14,7 @@ function ensureTableExists(){
 // Create the Watches table
     const createTable = () => {
         const createTableQuery = `
-    CREATE TABLE IF NOT EXISTS Watches (
+    CREATE TABLE IF NOT EXISTS ${globalTableName} (
         Code_annonce TEXT PRIMARY KEY,
         Marque TEXT,
         Lien TEXT,
@@ -60,4 +60,5 @@ module.exports = ensureTableExists;
 
 module.exports = {
     ensureTableExists: ensureTableExists,
+    globalTableName: globalTableName,
 };

@@ -20,19 +20,10 @@ async function CrawlOverModels() {
         let lastPageReached = false
         while (!lastPageReached) { //as long as we don't get a 404 error
             const pageNumber = `&showpage=${pageNumberIndex}`
-            const currentUrl = `https://www.chrono24.fr/search/index.htm?countryIds=FR
-                                           &currencyId=EUR&dosearch=true
-                                           &manufacturerIds=221
-                                           &maxAgeInDays=0
-                                           &models=2729
-                                           &pageSize=30
-                                           &redirectToSearchIndex=true
-                                           &resultview=block
-                                           ${pageNumber}
-                                           &sortorder=0`
+            const currentUrl = `https://www.chrono24.fr/search/index.htm?currencyId=EUR&dosearch=true&manufacturerIds=221&maxAgeInDays=0&models=2729&pageSize=60&redirectToSearchIndex=true&resultview=block&sellerType=PrivateSeller${pageNumber}&sortorder=0&countryIds=FR`
             //detect if the url get redirected using the requests module
 
-            console.log(`\n----------------------------------------------------\nScraping current Page: ${currentUrl}\n----------------------------------------------------\n`)
+            console.log(`\n----------------------------------------------------\nScraping current Page: \n ${currentUrl}\n----------------------------------------------------\n`)
 
 
             // const watchModelID = watchModelIDs[i].value;
@@ -41,7 +32,7 @@ async function CrawlOverModels() {
 
             await page.goto(currentUrl); //go to the current page
 
-            if (page.url().length < 41) {
+            if (page.url() === "https://www.chrono24.fr/search/index.htm") { //if the url is redirected to the rolex page
                 lastPageReached = true //if the url doesn't contain /rolex/ it means that we reached the last page
                 console.log("Last page reached")
                 return
