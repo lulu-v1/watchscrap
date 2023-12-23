@@ -1,6 +1,8 @@
 const sqlite3 = require('sqlite3').verbose();
 
-let globalTableName = `Watches_${Date.now()}`;
+const currentDate = new Date();
+const formattedDate = currentDate.toLocaleDateString('fr-FR');
+let globalTableName = `Watches_${formattedDate.replace(/\//g, "_")}`;
 function ensureTableExists(){
 
 // Connect to SQLite database (creates a new one if it doesn't exist)
@@ -8,7 +10,6 @@ function ensureTableExists(){
         if (err) {
             console.error(err.message);
         }
-        console.log('Connected to the watches_database database.');
     });
 
 // Create the Watches table
@@ -28,7 +29,7 @@ function ensureTableExists(){
         Contenu_livre TEXT,
         Sexe TEXT,
         Emplacement TEXT,
-        Prix TEXT,
+        Prix INT,
         Disponibilite TEXT,
         Calibre_Rouages TEXT,
         Reserve_de_marche TEXT,

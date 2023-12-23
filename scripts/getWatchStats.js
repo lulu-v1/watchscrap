@@ -1,11 +1,11 @@
 const {globalTableName} = require("./initDB");
 const sqlite3 = require('sqlite3').verbose();
-
+const c = require("../consoleColors.js");
 async function getWatchStats(page) {
     try {
         await page.waitForSelector(".js-details-and-security-tabs", {timeout: 1000});
     } catch (error) {
-        console.error('Error waiting for selector:', error);
+        console.error('Wrong Page URL');
         return;
     }
 
@@ -44,21 +44,42 @@ async function getWatchStats(page) {
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
             `;
 
+            function processWatch(watch) {
+
+                watch["Prix"] = watch["Prix"].split('€')[0].replace(/\s/g, '');
+
+                try {
+                    watch["État"].includes(' (')
+                    watch["État"] = watch["État"].split(' (')[0];
+                } catch (error) {
+                }
+
+                try {
+                    watch['Diamètre'].indexOf('Essayez')
+                    watch["Diamètre"] = watch["Diamètre"].split(' Essayez')[0];
+                } catch (error) {
+                }
+
+                return watch;
+            }
+
+            const ProcessedWatch = processWatch(watch);
+
             db.run(insertQuery, [
-                watch["Code annonce"], watch["Marque"], page.url(), watch["Modèle"], watch["Numéro de référence"],
-                watch["Mouvement"], watch["Boîtier"], watch["Matière du bracelet"],
-                watch["Année de fabrication"], watch["État"], watch["Contenu livré"], watch["Sexe"],
-                watch["Emplacement"], watch["Prix"], watch["Disponibilité"], watch["Calibre/Rouages"],
-                watch["Réserve de marche"], watch["Nombre de pierres"], watch["Diamètre"],
-                watch["Étanche"], watch["Matériau de la lunette"], watch["Verre"], watch["Cadran"],
-                watch["Chiffres du cadran"], watch["Couleur du bracelet"], watch["Boucle"],
-                watch["Matériau de la boucle"]
+                ProcessedWatch["Code annonce"], ProcessedWatch["Marque"], page.url(), ProcessedWatch["Modèle"], ProcessedWatch["Numéro de référence"],
+                ProcessedWatch["Mouvement"], ProcessedWatch["Boîtier"], ProcessedWatch["Matière du bracelet"],
+                ProcessedWatch["Année de fabrication"], ProcessedWatch["État"], ProcessedWatch["Contenu livré"], ProcessedWatch["Sexe"],
+                ProcessedWatch["Emplacement"], ProcessedWatch["Prix"], ProcessedWatch["Disponibilité"], ProcessedWatch["Calibre/Rouages"],
+                ProcessedWatch["Réserve de marche"], ProcessedWatch["Nombre de pierres"], ProcessedWatch["Diamètre"],
+                ProcessedWatch["Étanche"], ProcessedWatch["Matériau de la lunette"], ProcessedWatch["Verre"], ProcessedWatch["Cadran"],
+                ProcessedWatch["Chiffres du cadran"], ProcessedWatch["Couleur du bracelet"], ProcessedWatch["Boucle"],
+                ProcessedWatch["Matériau de la boucle"]
             ], (err) => {
                 if (err) {
                     console.error(err.message);
                     reject(err); // Reject the promise if there's an error inserting the data
                 }
-                console.log('Watch data inserted successfully.');
+                console.log(c.green + '[+]' + c.reset + ' Watch data inserted' + c.green + ' successfully' + c.reset);
                 db.close();
                 resolve(); // Resolve the promise if the data was inserted successfully
             });
