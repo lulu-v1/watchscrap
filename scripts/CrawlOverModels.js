@@ -49,28 +49,17 @@ async function CrawlOverModels() {
 
             pageNumberIndex++ //increment the page number
 
-
             //------------------------ Loop through all the watches pages ------------------------//
 
 
             const watchUrls = await getWatchPagesURLs(page) // Get all the watch pages URLs
 
-            const promises = []; // Array to hold promises
-
-            for (let j = 0; !lastPageReached && j < watchUrls.length; j++) {
-                // loop through all the watch pages
+            for (let j = 0;!lastPageReached && j < watchUrls.length; j++) { // loop through all the watch pages
                 console.log(`Scraping watch page: ${watchUrls[j]}`);
-                const promise = (async () => {
-                    await page.goto(watchUrls[j]);
-                    await getWatchStats(page);
-                    console.log("Sleeping for 2 seconds");
-                })();
-                promises.push(promise); // Push the promise into the array
+                await page.goto(watchUrls[j]);
+                await getWatchStats(page);
+                console.log("Sleeping for 2 seconds")
             }
-
-            Promise.all(promises)
-                .then(() => console.log("All promises resolved"))
-                .catch((err) => console.error("Error occurred:", err));
         }
         // }
 
