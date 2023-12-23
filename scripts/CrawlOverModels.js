@@ -58,7 +58,6 @@ async function CrawlOverModels() {
                 console.log(`Scraping watch page: ${watchUrls[j]}`);
                 await page.goto(watchUrls[j]);
                 await getWatchStats(page);
-                await sleep(1000);
             }
         }
         // }

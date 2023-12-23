@@ -9,6 +9,6 @@ async function main() {
     console.log("Crawl end finished");
 }
 
-main();
+main().then(r => console.log("Crawler finished"));
 
 
