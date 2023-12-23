@@ -1,6 +1,6 @@
 const sqlite3 = require('sqlite3').verbose();
 
-async function getWatchStats(page, db) {
+async function getWatchStats(page) {
     try {
         await page.waitForSelector(".js-details-and-security-tabs", {timeout: 1000});
     } catch (error) {
@@ -25,6 +25,7 @@ async function getWatchStats(page, db) {
     });
 
     return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database('./Database/db.sqlite', (err) => {
             if (err) {
                 console.error('Error connecting to database:', err.message);
                 reject(err); // Reject the promise if there's an error connecting to the database

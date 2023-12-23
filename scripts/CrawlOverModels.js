@@ -9,7 +9,6 @@ function sleep(number) {
 }
 
 async function CrawlOverModels() {
-    const db = new sqlite3.Database('./Database/db.sqlite', (err) => {
     const browser = await puppeteer.launch({headless: true});
     const page = await browser.newPage();
     await page.goto('https://chrono24.fr/rolex/index.htm');
@@ -63,8 +62,7 @@ async function CrawlOverModels() {
                 console.log(`Scraping watch page: ${watchUrls[j]}`);
                 const promise = (async () => {
                     await page.goto(watchUrls[j]);
-
-                    await getWatchStats(page, db);
+                    await getWatchStats(page);
                     console.log("Sleeping for 2 seconds");
                 })();
                 promises.push(promise); // Push the promise into the array
