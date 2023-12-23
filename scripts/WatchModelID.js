@@ -33,11 +33,6 @@ async function getWatchModelsID() {
         return watches;
     });
 
-    // Write to JSON file using fs-extra
-    await fs.ensureFile('./data/watchModelIDs.json');
-    await fs.writeJson('./data/watchModelIDs.json', watchModels, {spaces: 2});
-    await sleep(200)
-    await browser.close();
 }
 
 export default getWatchModelsID;

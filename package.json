@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "dependencies": {
     "fs-extra": "^11.2.0",
-    "puppeteer": "^21.6.1"
+    "puppeteer": "^21.6.1",
+    "request": "^2.88.2",
+    "sqlite3": "^5.1.6"
   },
   "type": "commonjs"
 }
