@@ -56,6 +56,8 @@ async function CrawlOverModels() {
 
     } catch (error) {
         console.error('Error occurred during scraping:', error);
+        await browser.close();
+
     } finally {
         console.log("Closing the browser FINALLY DONE");
         await browser.close();
