@@ -16,7 +16,7 @@ async function CrawlOverModels() {
     await page.click('.js-cookie-accept-all');
     try {
         // for (let i = 1; i < watchModelIDs.length; i++) {
-        let pageNumberIndex = 2
+        let pageNumberIndex = 1
         let lastPageReached = false
         while (!lastPageReached) { //as long as we don't get a 404 error
             const pageNumber = `&showpage=${pageNumberIndex}`
@@ -58,6 +58,7 @@ async function CrawlOverModels() {
                 console.log(`Scraping watch page: ${watchUrls[j]}`);
                 await page.goto(watchUrls[j]);
                 await getWatchStats(page);
+                console.log("Sleeping for 2 seconds")
             }
         }
         // }
