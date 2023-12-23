@@ -1,10 +1,8 @@
 const puppeteer = require('puppeteer');
-const watchModelIDs = require('../Info/watchModelIDs.json');
 const getWatchPagesURLs = require("./GetWatchPagesURLs");
-const getWatchStats = require("./GetWatchStats");
+const getWatchStats = require("./getWatchStats");
 const fs = require("fs-extra");
-const c = require("../Style/consoleColors");
-let watchCounter = 0;
+
 function sleep(number) {
     return new Promise(resolve => setTimeout(resolve, number));
 }
@@ -17,20 +15,26 @@ async function CrawlOverModels() {
     await page.click('.js-cookie-accept-all');
     try {
         // for (let i = 1; i < watchModelIDs.length; i++) {
-        let pageNumberIndex = 0
+        let pageNumberIndex = 1
         let lastPageReached = false
         while (!lastPageReached) { //as long as we don't get a 404 error
             const pageNumber = `&showpage=${pageNumberIndex}`
-            const currentUrl = `https://www.chrono24.fr/search/index.htm?currencyId=EUR&dosearch=true&manufacturerIds=221&maxAgeInDays=0&pageSize=120&redirectToSearchIndex=true&resultview=block&sellerType=PrivateSeller${pageNumber}&sortorder=0&countryIds=FR`
+            const currentUrl = `https://www.chrono24.fr/search/index.htm?currencyId=EUR&dosearch=true&manufacturerIds=221&maxAgeInDays=0&pageSize=60&redirectToSearchIndex=true&resultview=block&sellerType=PrivateSeller${pageNumber}&sortorder=0&countryIds=FR`
             //detect if the url get redirected using the requests module
 
-            console.log(`\n----------------------------------------------------\nScraping current Page: \n ${currentUrl}\n----------------------------------------------------\n`)
+            console.log(`\n----------------------------------------------------\nScraping current Page ${pageNumberIndex}: \n ${currentUrl}\n----------------------------------------------------\n`)
+
+
+            // const watchModelID = watchModelIDs[i].value;
+            // console.log(`Scraping watch model ID: ${watchModelID}`);
+
+
             await page.goto(currentUrl); //go to the current page
 
             if (page.url() === "https://www.chrono24.fr/search/index.htm") { //if the url is redirected to the rolex page
                 lastPageReached = true //if the url doesn't contain /rolex/ it means that we reached the last page
                 console.log("Last page reached")
-                return;
+                return
             }
 
             pageNumberIndex++ //increment the page number
@@ -39,23 +43,21 @@ async function CrawlOverModels() {
 
 
             const watchUrls = await getWatchPagesURLs(page) // Get all the watch pages URLs
-            console.log(`Found ` + c.green  + watchUrls.length + c.reset + ` Watches pages on page ${pageNumberIndex}`)
+
             for (let j = 0;!lastPageReached && j < watchUrls.length; j++) { // loop through all the watch pages
                 console.log(`Scraping watch page: ${watchUrls[j]}`);
-                console.log(`Watch number ${watchCounter}`)
-                watchCounter++
                 await page.goto(watchUrls[j]);
                 await getWatchStats(page);
-
             }
         }
         // }
 
     } catch (error) {
         console.error('Error occurred during scraping:', error);
+        await browser.close();
+
     } finally {
-        console.log(c.green + '[+]' + c.reset + " Done scraping. Closing browser...");
-        console.log(`Scraped ${watchCounter} watches`);
+        console.log("Closing the browser FINALLY DONE");
         await browser.close();
     }
 }
