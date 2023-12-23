@@ -23,7 +23,7 @@ async function CrawlOverModels() {
             const currentUrl = `https://www.chrono24.fr/search/index.htm?currencyId=EUR&dosearch=true&manufacturerIds=221&maxAgeInDays=0&models=2729&pageSize=60&redirectToSearchIndex=true&resultview=block&sellerType=PrivateSeller${pageNumber}&sortorder=0&countryIds=FR`
             //detect if the url get redirected using the requests module
 
-            console.log(`\n----------------------------------------------------\nScraping current Page: \n ${currentUrl}\n----------------------------------------------------\n`)
+            console.log(`\n----------------------------------------------------\nScraping current Page ${pageNumberIndex}: \n ${currentUrl}\n----------------------------------------------------\n`)
 
 
             // const watchModelID = watchModelIDs[i].value;
