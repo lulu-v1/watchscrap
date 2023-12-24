@@ -3,7 +3,7 @@ const db = require("./Db");
 const sqlite3 = require("sqlite3");
 const processWatch = require("./ProcessWatchData").processWatch;
 
-async function checkIfKeyExists(lien) {
+async function checkIfLinkExists(lien) {
     const globalTableName = db.globalTableName;
     const query = `SELECT * FROM ${globalTableName} WHERE Lien = ?`;
 
@@ -99,4 +99,4 @@ function deleteWatchById(id, callback) {
     });
 }
 
-module.exports = {insertWatch, getAllWatches, getNumberOfWatches, checkIfKeyExists}
+module.exports = {insertWatch, getAllWatches, getNumberOfWatches, checkIfLinkExists: checkIfLinkExists}
