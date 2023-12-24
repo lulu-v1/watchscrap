@@ -3,6 +3,20 @@ const db = require("./Db");
 const sqlite3 = require("sqlite3");
 const processWatch = require("./ProcessWatchData").processWatch;
 
+async function checkIfKeyExists(lien) {
+    const globalTableName = db.globalTableName;
+    const query = `SELECT * FROM ${globalTableName} WHERE Lien = ?`;
+
+    return new Promise((resolve, reject) => {
+        db.db.get(query, [lien], (err, row) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(!!row);
+            }
+        });
+    });
+}
 
 function insertWatch(watch) {
 
@@ -39,16 +53,11 @@ function insertWatch(watch) {
 }
 
 async function getNumberOfWatches(globalTableName = db.globalTableName) {
-    const db = await new sqlite3.Database('./Database/db.sqlite', (err) => {
-        if (err) {
-            console.error(err.message);
-        }
-    });
     const selectQuery = `SELECT COUNT(1)
                          FROM ${globalTableName}`;
 
     return new Promise((resolve, reject) => {
-        db.get(selectQuery, [], (err, row) => {
+        db.db.get(selectQuery, [], (err, row) => {
             if (err) {
                 console.log(c.red + '[-]' + c.reset + ' Error fetching number of watches');
                 console.error(err.message);
@@ -90,4 +99,4 @@ function deleteWatchById(id, callback) {
     });
 }
 
-module.exports = {insertWatch, getAllWatches, getNumberOfWatches}
+module.exports = {insertWatch, getAllWatches, getNumberOfWatches, checkIfKeyExists}
