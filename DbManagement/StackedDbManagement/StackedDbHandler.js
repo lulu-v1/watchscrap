@@ -7,8 +7,7 @@ function insertIntoStackedDB(TableName, values) {
     const StackedTableName = `Stacked_${TableName}`
     try {
         const insertQuery = `
-            INSERT
-            OR REPLACE INTO
+            INSERT OR REPLACE INTO
             ${StackedTableName}
             (
             Stack_id,
@@ -85,7 +84,6 @@ const stackWatches = async (tableName) => {
             FROM ${db.globalTableName}
             GROUP BY Modele, Annee_de_fabrication
             HAVING COUNT(*) > 1;
-            // Adjust condition as needed
         `;
 
         db.db.all(query, [], (err, rows) => {
@@ -99,7 +97,6 @@ const stackWatches = async (tableName) => {
                 const {Modele, Annee_de_fabrication, TotalWatches} = row;
                 console.log(c.green + "  {++}  " + c.reset + `Stacking watches for Model: ${Modele}, Release Date: ${Annee_de_fabrication}, Total: ${TotalWatches}`);
                 return insertIntoStackedDB(tableName, [`${Modele}_${Annee_de_fabrication}`, TotalWatches, 0, 0, 0, 0, ''])
-
             });
         });
     } catch (error) {

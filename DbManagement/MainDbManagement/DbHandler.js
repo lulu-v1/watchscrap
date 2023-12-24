@@ -1,17 +1,19 @@
 const c = require("../../Style/consoleColors");
 const db = require("./Db");
+const sqlite3 = require("sqlite3");
 const processWatch = require("./ProcessWatchData").processWatch;
 
 
-function insertWatch(watch){
+function insertWatch(watch) {
 
     const insertQuery = `
-        INSERT OR
-        REPLACE INTO ${db.globalTableName} (Code_annonce, Marque, Lien, Modele, Numero_de_reference, Mouvement,
-                                         Boitier, Matiere_du_bracelet, Annee_de_fabrication, Etat, Contenu_livre, Sexe,
-                                         Emplacement, Prix, Disponibilite, Calibre_Rouages, Reserve_de_marche,
-                                         Nombre_de_pierres, Diametre, Etanche, Materiau_de_la_lunette, Verre,
-                                         Cadran, Chiffres_du_cadran, Couleur_du_bracelet, Boucle, Materiau_de_la_boucle)
+        INSERT INTO ${db.globalTableName} (Code_annonce, Marque, Lien, Modele, Numero_de_reference, Mouvement,
+                                           Boitier, Matiere_du_bracelet, Annee_de_fabrication, Etat, Contenu_livre,
+                                           Sexe,
+                                           Emplacement, Prix, Disponibilite, Calibre_Rouages, Reserve_de_marche,
+                                           Nombre_de_pierres, Diametre, Etanche, Materiau_de_la_lunette, Verre,
+                                           Cadran, Chiffres_du_cadran, Couleur_du_bracelet, Boucle,
+                                           Materiau_de_la_boucle)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     `;
 
@@ -35,8 +37,31 @@ function insertWatch(watch){
         console.log(c.green + '[+]' + c.reset + ' Watch Info inserted successfully' + c.reset);
     });
 }
+
+async function getNumberOfWatches(globalTableName = db.globalTableName) {
+    const db = await new sqlite3.Database('./Database/db.sqlite', (err) => {
+        if (err) {
+            console.error(err.message);
+        }
+    });
+    const selectQuery = `SELECT COUNT(1)
+                         FROM ${globalTableName}`;
+
+    return new Promise((resolve, reject) => {
+        db.get(selectQuery, [], (err, row) => {
+            if (err) {
+                console.log(c.red + '[-]' + c.reset + ' Error fetching number of watches');
+                console.error(err.message);
+                return reject(err);
+            }
+            resolve(row["COUNT(1)"]);
+        });
+    });
+}
+
 function getAllWatches(callback) {
-    const selectQuery = `SELECT * FROM ${db.globalTableName}`;
+    const selectQuery = `SELECT *
+                         FROM ${db.globalTableName}`;
 
     db.db.all(selectQuery, [], (err, rows) => {
         if (err) {
@@ -48,8 +73,11 @@ function getAllWatches(callback) {
         callback(null, rows);
     });
 }
+
 function deleteWatchById(id, callback) {
-    const deleteQuery = `DELETE FROM ${db.globalTableName} WHERE id = ?`;
+    const deleteQuery = `DELETE
+                         FROM ${db.globalTableName}
+                         WHERE id = ?`;
 
     db.db.run(deleteQuery, [id], (err) => {
         if (err) {
@@ -62,6 +90,4 @@ function deleteWatchById(id, callback) {
     });
 }
 
-
-
-module.exports = { insertWatch, getAllWatches } ;
+module.exports = {insertWatch, getAllWatches, getNumberOfWatches}
