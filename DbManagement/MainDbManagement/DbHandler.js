@@ -1,31 +1,13 @@
-const {globalTableName} = require("../DbManagement/DbOpener");
-const c = require("../Style/consoleColors");
-const db = require("../DbManagement/DbOpener").db;
+const c = require("../../Style/consoleColors");
+const db = require("./Db");
+const processWatch = require("./ProcessWatchData").processWatch;
 
 
 function insertWatch(watch){
-    function processWatch(watch) {
-        try {
-            watch["Prix"] = watch["Prix"].split('€')[0].replace(/\s/g, '');
-        } catch (error) {
-            console.log("Error parsing watch price")
-        }
-        try {
-            watch["État"] = watch["État"].split(' (')[0];
-        } catch (error) {
-            console.log("Error parsing watch state")
-        }
-        try {
-            watch["Diamètre"] = watch["Diamètre"].split(' Essayez')[0];
-        } catch (error) {
-            console.log("Error parsing watch diameter")
-        }
-        return watch;
-    }
 
     const insertQuery = `
         INSERT OR
-        REPLACE INTO ${globalTableName} (Code_annonce, Marque, Lien, Modele, Numero_de_reference, Mouvement,
+        REPLACE INTO ${db.globalTableName} (Code_annonce, Marque, Lien, Modele, Numero_de_reference, Mouvement,
                                          Boitier, Matiere_du_bracelet, Annee_de_fabrication, Etat, Contenu_livre, Sexe,
                                          Emplacement, Prix, Disponibilite, Calibre_Rouages, Reserve_de_marche,
                                          Nombre_de_pierres, Diametre, Etanche, Materiau_de_la_lunette, Verre,
@@ -35,7 +17,7 @@ function insertWatch(watch){
 
     const ProcessedWatch = processWatch(watch);
 
-    db.run(insertQuery, [
+    db.db.run(insertQuery, [
         ProcessedWatch["Code annonce"], ProcessedWatch["Marque"], ProcessedWatch["Lien"], ProcessedWatch["Modèle"], ProcessedWatch["Numéro de référence"],
         ProcessedWatch["Mouvement"], ProcessedWatch["Boîtier"], ProcessedWatch["Matière du bracelet"],
         ProcessedWatch["Année de fabrication"], ProcessedWatch["État"], ProcessedWatch["Contenu livré"], ProcessedWatch["Sexe"],
@@ -54,9 +36,9 @@ function insertWatch(watch){
     });
 }
 function getAllWatches(callback) {
-    const selectQuery = `SELECT * FROM ${globalTableName}`;
+    const selectQuery = `SELECT * FROM ${db.globalTableName}`;
 
-    db.all(selectQuery, [], (err, rows) => {
+    db.db.all(selectQuery, [], (err, rows) => {
         if (err) {
             console.log(c.red + '[-]' + c.reset + ' Error fetching watches');
             console.error(err.message);
@@ -67,9 +49,9 @@ function getAllWatches(callback) {
     });
 }
 function deleteWatchById(id, callback) {
-    const deleteQuery = `DELETE FROM ${globalTableName} WHERE id = ?`;
+    const deleteQuery = `DELETE FROM ${db.globalTableName} WHERE id = ?`;
 
-    db.run(deleteQuery, [id], (err) => {
+    db.db.run(deleteQuery, [id], (err) => {
         if (err) {
             console.log(c.red + '[-]' + c.reset + ' Error deleting watch by ID');
             console.error(err.message);

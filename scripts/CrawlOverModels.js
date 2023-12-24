@@ -14,19 +14,13 @@ async function CrawlOverModels() {
     await page.waitForSelector('.js-cookie-accept-all');
     await page.click('.js-cookie-accept-all');
     try {
-        // for (let i = 1; i < watchModelIDs.length; i++) {
         let pageNumberIndex = 1
         let lastPageReached = false
         while (!lastPageReached) { //as long as we don't get a 404 error
             const pageNumber = `&showpage=${pageNumberIndex}`
             const currentUrl = `https://www.chrono24.fr/search/index.htm?currencyId=EUR&dosearch=true&manufacturerIds=221&maxAgeInDays=0&pageSize=60&redirectToSearchIndex=true&resultview=block&sellerType=PrivateSeller${pageNumber}&sortorder=0&countryIds=FR`
-            //detect if the url get redirected using the requests module
 
             console.log(`\n----------------------------------------------------\nScraping current Page ${pageNumberIndex}: \n ${currentUrl}\n----------------------------------------------------\n`)
-
-
-            // const watchModelID = watchModelIDs[i].value;
-            // console.log(`Scraping watch model ID: ${watchModelID}`);
 
 
             await page.goto(currentUrl); //go to the current page
@@ -50,7 +44,6 @@ async function CrawlOverModels() {
                 await getWatchStats(page);
             }
         }
-        // }
 
     } catch (error) {
         console.error('Error occurred during scraping:', error);
@@ -66,5 +59,4 @@ module.exports = CrawlOverModels;
 
 module.exports = {
     CrawlOverModels: CrawlOverModels,
-    sleep: sleep
 };
