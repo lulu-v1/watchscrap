@@ -2,17 +2,18 @@ const sqlite3 = require('sqlite3').verbose();
 
 const currentDate = new Date();
 let globalTableName = `Rolex_${currentDate.getFullYear()}_${currentDate.getMonth() + 1}_${currentDate.getDate()}_${currentDate.getHours()}_${currentDate.getMinutes()}`;
+
 const db = new sqlite3.Database('./Database/db.sqlite', (err) => {
     if (err) {
         console.error(err.message);
     }
 });
 
-const openDB = () => {
+const openDB = (tableName = globalTableName) => {
     const createTableQuery = `
-            CREATE TABLE IF NOT EXISTS ${globalTableName}
+            CREATE TABLE IF NOT EXISTS ${tableName}
             (
-                Code_annonce           TEXT,
+                Code_annonce           TEXT PRIMARY KEY,
                 Marque                 TEXT,
                 Lien                   TEXT,
                 Modele                 TEXT,

@@ -1,4 +1,4 @@
-const {globalTableName} = require("../DbManagement/DbOpener");
+const {globalTableName} = require("../DbManagement/MainDbManagement/Db");
 const sqlite3 = require("sqlite3");
 
 function RetrieveAllWatches() {

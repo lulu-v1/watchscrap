@@ -59,5 +59,4 @@ module.exports = CrawlOverModels;
 
 module.exports = {
     CrawlOverModels: CrawlOverModels,
-    sleep: sleep
 };
