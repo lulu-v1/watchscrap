@@ -14,15 +14,11 @@ function insertIntoStackedDB(TableName, values) {
             Stack_id,
             Amount,
             Average_price,
-            Lowest_price,
             Highest_price,
-            Last_sale,
-            Last_sale_date
+            Lowest_price
             )
             VALUES
             (
-            ?,
-            ?,
             ?,
             ?,
             ?,
@@ -94,7 +90,7 @@ const stackWatches = async (tableName) => {
                         LowestPrice,
                     } = row;
                     console.log(c.green + "  {++}  " + c.reset + `Stacking watches for Model: ${Modele}, Release Date: ${Annee_de_fabrication}, Total: ${TotalWatches}`);
-                    await insertIntoStackedDB(tableName, [Modele + "_" + Annee_de_fabrication, TotalWatches, AveragePrice, HighestPrice, LowestPrice, '']);
+                    await insertIntoStackedDB(tableName, [Modele + "_" + Annee_de_fabrication, TotalWatches, AveragePrice, HighestPrice, LowestPrice]);
                 }
                 resolve();
             } catch (error) {

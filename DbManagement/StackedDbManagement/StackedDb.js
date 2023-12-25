@@ -18,9 +18,7 @@ const openStackedDB = (tableName) => {
             Amount         INT,
             Average_price  INT,
             Lowest_price   INT,
-            Highest_price  INT,
-            Last_sale      INT,
-            Last_sale_date TEXT
+            Highest_price  INT
         );
     `;
     stackedDB.run(createTableQuery, (err) => {

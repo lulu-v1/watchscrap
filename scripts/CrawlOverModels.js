@@ -43,17 +43,6 @@ async function scrapePage(browser, pageNumberIndex) {
             }
 
             const watchUrls = await getWatchPagesURLs(page);
-            checkIfUrlDuplicate.push(watchUrls);
-
-            for (let i = 0; i < checkIfUrlDuplicate.length; i++) {
-                for (let j = 0; j < checkIfUrlDuplicate[i].length - 1; j++) {
-                    if (checkIfUrlDuplicate[i][j] === checkIfUrlDuplicate[i][j + 1]) {
-                        console.log("Duplicate found: " + checkIfUrlDuplicate[i][j]);
-                        await page.close();
-                        return
-                    }
-                }
-            }
 
             console.log(`[Found ${watchUrls.length} watches]`);
 
