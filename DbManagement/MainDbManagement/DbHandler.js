@@ -5,7 +5,9 @@ const processWatch = require("./ProcessWatchData").processWatch;
 
 async function checkIfLinkExists(lien) {
     const globalTableName = db.globalTableName;
-    const query = `SELECT * FROM ${globalTableName} WHERE Lien = ?`;
+    const query = `SELECT *
+                   FROM ${globalTableName}
+                   WHERE Lien = ?`;
 
     return new Promise((resolve, reject) => {
         db.db.get(query, [lien], (err, row) => {
@@ -68,6 +70,13 @@ async function getNumberOfWatches(globalTableName = db.globalTableName) {
     });
 }
 
+
+async function dbIsFull(AmountOfWatchesToCrawl) {
+    const numberOfWatchesInDb = await getNumberOfWatches();
+    return numberOfWatchesInDb >= AmountOfWatchesToCrawl;
+}
+
+
 function getAllWatches(callback) {
     const selectQuery = `SELECT *
                          FROM ${db.globalTableName}`;
@@ -99,4 +108,4 @@ function deleteWatchById(id, callback) {
     });
 }
 
-module.exports = {insertWatch, getAllWatches, getNumberOfWatches, checkIfLinkExists: checkIfLinkExists}
+module.exports = {insertWatch, getAllWatches, getNumberOfWatches, checkIfLinkExists: checkIfLinkExists,dbIsFull: dbIsFull, deleteWatchById: deleteWatchById}

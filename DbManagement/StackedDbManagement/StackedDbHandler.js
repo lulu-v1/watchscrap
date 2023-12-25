@@ -4,10 +4,11 @@ const c = require("../../Style/consoleColors.js");
 const db = require('../MainDbManagement/Db');
 
 function insertIntoStackedDB(TableName, values) {
-    const StackedTableName = `Stacked_${TableName}`
-    try {
+    return new Promise((resolve, reject) => {
+        const StackedTableName = `Stacked_${TableName}`
         const insertQuery = `
-            INSERT OR REPLACE INTO
+            INSERT
+            OR REPLACE INTO
             ${StackedTableName}
             (
             Stack_id,
@@ -32,11 +33,11 @@ function insertIntoStackedDB(TableName, values) {
         stackedDB.stackedDB.run(insertQuery, values, function (err) {
             if (err) {
                 console.log(c.red + `Error inserting into Stacked DB:` + c.reset + ` ${err.message}\n`);
+                reject(err);
             }
+            resolve();
         });
-    } catch (e) {
-        console.error('Catch block error:', e);
-    }
+    });
 }
 
 
@@ -60,53 +61,52 @@ const updateStackedDB = (values) => {
     });
 };
 
-const deleteFromStackedDB = (stackId) => {
-    const deleteQuery = `
-        DELETE
-        FROM ${db.globalTableName}
-        WHERE Stack_id = ?;
-    `;
-    stackedDB.stackedDB.run(deleteQuery, [stackId], (err) => {
-        if (err) {
-            console.error(err.message);
-        } else {
-            console.log('Row deleted successfully');
-        }
-    });
-};
-
 
 const stackWatches = async (tableName) => {
-    try {
-        // Query to fetch watches from main db grouped by model and release date
+    return new Promise((resolve, reject) => {
+        console.log(c.BGcyan + "  {++}  " + `Stacking watches for table: ${tableName}` + c.reset + "\n");
         const query = `
-            SELECT Modele, Annee_de_fabrication, COUNT(*) as TotalWatches
-            FROM ${db.globalTableName}
+            SELECT Modele,
+                   Annee_de_fabrication,
+                   COUNT(*)         as TotalWatches,
+                   ROUND(AVG(Prix)) as AveragePrice,
+                   MAX(Prix)        as HighestPrice,
+                   MIN(Prix)        as LowestPrice
+            FROM ${tableName}
             GROUP BY Modele, Annee_de_fabrication
-            HAVING COUNT(*) > 1;
+            HAVING COUNT(*) >= 1
         `;
 
-        db.db.all(query, [], (err, rows) => {
+        db.db.all(query, [], async (err, rows) => {
             if (err) {
                 console.error(err.message);
+                reject(err);
                 return;
             }
-
-            // Iterate through fetched records to stack watches
-            rows.forEach(async (row) => {
-                const {Modele, Annee_de_fabrication, TotalWatches} = row;
-                console.log(c.green + "  {++}  " + c.reset + `Stacking watches for Model: ${Modele}, Release Date: ${Annee_de_fabrication}, Total: ${TotalWatches}`);
-                return insertIntoStackedDB(tableName, [`${Modele}_${Annee_de_fabrication}`, TotalWatches, 0, 0, 0, 0, ''])
-            });
+            try {
+                for (const row of rows) {
+                    const {
+                        Modele,
+                        Annee_de_fabrication,
+                        TotalWatches,
+                        AveragePrice,
+                        HighestPrice,
+                        LowestPrice,
+                    } = row;
+                    console.log(c.green + "  {++}  " + c.reset + `Stacking watches for Model: ${Modele}, Release Date: ${Annee_de_fabrication}, Total: ${TotalWatches}`);
+                    await insertIntoStackedDB(tableName, [Modele + "_" + Annee_de_fabrication, TotalWatches, AveragePrice, HighestPrice, LowestPrice, '']);
+                }
+                resolve();
+            } catch (error) {
+                console.log(c.red + "Error while stacking watches" + c.reset);
+                reject(error);
+            }
         });
-    } catch (error) {
-        console.log(c.red + "Error while stacking watches" + c.reset)
-    }
+    });
 };
 
 
 module.exports = {
     updateStackedDB: updateStackedDB,
-    deleteFromStackedDB: deleteFromStackedDB,
     stackWatches: stackWatches,
 }

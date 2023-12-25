@@ -10,13 +10,11 @@ async function getWatchPagesURLs(page) {
     const uniqueUrls = await Promise.all(
         urls.map(async url => {
             const exists = await dbHandler.checkIfLinkExists(url);
-            if (exists) {
-                console.log(`Key '${url}' exists in the database.`);
-                return null; // Returning null for URLs that exist in the database
-            } else {
+            if (!exists){
                 console.log(`Key '${url}' does not exist in the database.`);
                 return url.includes("/rolex/") ? url : null; // Returning URLs that contain "/rolex/"
             }
+            return null;
         })
     );
 

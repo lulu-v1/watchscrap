@@ -113,5 +113,6 @@ async function CrawlOverModels() {
 }
 
 module.exports = {
-    CrawlOverModels: CrawlOverModels
+    CrawlOverModels: CrawlOverModels,
+    GetTotalNumberOfWatches: GetTotalNumberOfWatches
 };
