@@ -2,7 +2,7 @@ const sqlite3 = require('sqlite3').verbose();
 
 const globalStackedTableName = ``
 
-const stackedDB = new sqlite3.Database('./Database/stacked/stacked_db.sqlite', (err) => {
+const stackedDB = new sqlite3.Database('./Database/stacked_db.sqlite', (err) => {
     if (err) {
         console.error(err.message);
     }else{

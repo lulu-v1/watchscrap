@@ -38,17 +38,7 @@ function insertIntoStackedDB(TableName, values) {
         console.error('Catch block error:', e);
     }
 }
-function checkIfKeyExists(keyToCheck) {
-    return new Promise((resolve, reject) => {
-        db.db.get('SELECT * FROM your_table_name WHERE Code_annonce = ?', [keyToCheck], (err, row) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(!!row); // If row exists, the key exists
-            }
-        });
-    });
-}
+
 
 const updateStackedDB = (values) => {
     const updateQuery = `

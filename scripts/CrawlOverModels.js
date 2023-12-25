@@ -1,11 +1,14 @@
 const puppeteer = require('puppeteer');
 const getWatchPagesURLs = require("./GetWatchPagesURLs");
 const getWatchStats = require("./getWatchStats");
-const {globalTableName} = require("../DbManagement/MainDbManagement/Db");
+const {db, globalTableName} = require("../DbManagement/MainDbManagement/Db");
 const {getNumberOfWatches} = require("../DbManagement/MainDbManagement/DbHandler");
 
 const checkIfUrlDuplicate = [];
 
+function sleep(number) {
+    return new Promise(resolve => setTimeout(resolve, number));
+}
 
 async function GetNumberOfPages() {
     const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox']});
@@ -49,8 +52,6 @@ async function scrapePage(browser, pageNumberIndex) {
                 for (let j = 0; j < checkIfUrlDuplicate[i].length - 1; j++) {
                     if (checkIfUrlDuplicate[i][j] === checkIfUrlDuplicate[i][j + 1]) {
                         console.log("Duplicate found: " + checkIfUrlDuplicate[i][j]);
-                        await page.close();
-                        return
                     }
                 }
             }
@@ -89,11 +90,10 @@ async function CrawlOverModels() {
 
     const totalWatches = await GetTotalNumberOfWatches()
     console.log(`Total number of watches: ${totalWatches}`);
-    console.log(`Total number of pages to scrap: ${totalPages}`);
+    console.log(`Total number of pages to scrape: ${totalPages}`);
 
     const promises = [];
     let WatchesInDb = await getNumberOfWatches(globalTableName)
-    console.log(`Watches in DB: ${WatchesInDb}`);
     const browser = await puppeteer.launch({ headless: false, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
     while (WatchesInDb < totalWatches) {
         for (let i = 1; i <= totalPages; i++) {
