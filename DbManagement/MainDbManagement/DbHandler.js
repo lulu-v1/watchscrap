@@ -52,7 +52,7 @@ function insertWatch(watch) {
     });
 }
 
-async function getNumberOfWatches(globalTableName = db.globalTableName) {
+async function getNumberOfWatchesInDB(globalTableName = db.globalTableName) {
     const selectQuery = `SELECT COUNT(1)
                          FROM ${globalTableName}`;
 
@@ -99,4 +99,4 @@ function deleteWatchById(id, callback) {
     });
 }
 
-module.exports = {insertWatch, getAllWatches, getNumberOfWatches, checkIfLinkExists: checkIfLinkExists}
+module.exports = {insertWatch, getAllWatches, getNumberOfWatches: getNumberOfWatchesInDB, checkIfLinkExists: checkIfLinkExists}

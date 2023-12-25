@@ -3,7 +3,7 @@ const dbHandler = require("../DbManagement/MainDbManagement/DbHandler")
 
 async function getWatchStats(page) {
     try {
-        await page.waitForSelector(".js-details-and-security-tabs", { visible: true, timeout: 3000 });
+        await page.waitForSelector(".js-details-and-security-tabs", {timeout: 0});
     } catch (error) {
         console.error(c.red + '[-]' + c.reset + ' Wrong Page URL');
         return;
@@ -22,6 +22,7 @@ async function getWatchStats(page) {
         });
         return watchData;
     });
+    page.close();
     watch["Lien"] = page.url();
     dbHandler.insertWatch(watch)
 }
