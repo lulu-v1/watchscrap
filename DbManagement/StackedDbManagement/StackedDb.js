@@ -6,7 +6,7 @@ const stackedDB = new sqlite3.Database('./Database/stacked/stacked_db.sqlite', (
     if (err) {
         console.error(err.message);
     }else{
-        console.log("Stacked DB opened successfully")
+        console.log("Light DB opened successfully")
     }
 });
 
