@@ -108,6 +108,7 @@ async function CrawlOverModels() {
             console.log(`Processed watches. Watches in DB: ${watchesInDb}`);
         }
     }
+
     console.log("Done");
     await browser.close();
 }
