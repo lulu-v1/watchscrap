@@ -1,7 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 
 const currentDate = new Date();
-let globalTableName = `Rolex_${currentDate.getFullYear()}_${currentDate.getMonth() + 1}_${currentDate.getDate()}_${currentDate.getHours()}`;
+let globalTableName = `Rolex_${currentDate.getFullYear()}_${currentDate.getMonth() + 1}_${currentDate.getDate()}_${currentDate.getHours()}_${currentDate.getMinutes()}`;
 
 const db = new sqlite3.Database('./Database/raw/db.sqlite', (err) => {
     if (err) {
