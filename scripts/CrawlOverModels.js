@@ -86,7 +86,7 @@ async function CrawlOverModels() {
     // Divide AllWatchesLinks into chunks of 60 links each
     const linkChunks = [];
 
-    const chunkSize = 150; // number of links per chunk
+    const chunkSize = 25; // number of links per chunk
 
     for (let i = 0; i < AllWatchesLinks.length; i += chunkSize) {
         linkChunks.push(AllWatchesLinks.slice(i, i + chunkSize));
