@@ -1,4 +1,4 @@
-const c = require("../../Style/consoleColors");
+const c = require("../../consoleColors");
 const db = require("./Db");
 const sqlite3 = require("sqlite3");
 const processWatch = require("./ProcessWatchData").processWatch;

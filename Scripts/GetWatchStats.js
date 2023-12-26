@@ -1,4 +1,4 @@
-const c = require("../Style/consoleColors.js");
+const c = require("../consoleColors.js");
 const dbHandler = require("../DbManagement/MainDbManagement/DbHandler")
 
 async function getWatchStats(page) {

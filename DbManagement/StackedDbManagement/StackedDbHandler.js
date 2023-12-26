@@ -1,5 +1,5 @@
 const stackedDB = require("./StackedDb");
-const c = require("../../Style/consoleColors.js");
+const c = require("../../consoleColors.js");
 
 const db = require('../MainDbManagement/Db');
 
