@@ -105,50 +105,53 @@ async function insertSale(values, saleDate = formatDate(db.globalTableName)) {
     });
 
 }
-async function insertUpdate(values, saleDate = formatDate(db.globalTableName)) {
+async function insertUpdate(values, updateDate = formatDate(db.globalTableName),initialPrice) {
     let postDate = await getPostDate(values[0]);
     const insertQuery = `
-        INSERT INTO Global_sales (Code_annonce,
-                                  Lien,
-                                  Modele,
-                                  Prix,
-                                  Etat,
-                                  Annee_de_fabrication,
-                                  Materiau_de_la_lunette,
-                                  Numero_de_reference,
-                                  Mouvement,
-                                  Boitier,
-                                  Matiere_du_bracelet,
-                                  Contenu_livre,
-                                  Sexe,
-                                  Emplacement,
-                                  Disponibilite,
-                                  Calibre_Rouages,
-                                  Reserve_de_marche,
-                                  Nombre_de_pierres,
-                                  Diametre,
-                                  Etanche,
-                                  Verre,
-                                  Marque,
-                                  Cadran,
-                                  Chiffres_du_cadran,
-                                  Couleur_du_bracelet,
-                                  Boucle,
-                                  Materiau_de_la_boucle,
-                                  Date_de_poste,
-                                  Date_de_vente)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        INSERT INTO Global_updates (Code_annonce,
+                                    Lien,
+                                    Modele,
+                                    Prix,
+                                    Etat,
+                                    Annee_de_fabrication,
+                                    Materiau_de_la_lunette,
+                                    Numero_de_reference,
+                                    Mouvement,
+                                    Boitier,
+                                    Matiere_du_bracelet,
+                                    Contenu_livre,
+                                    Sexe,
+                                    Emplacement,
+                                    Disponibilite,
+                                    Calibre_Rouages,
+                                    Reserve_de_marche,
+                                    Nombre_de_pierres,
+                                    Diametre,
+                                    Etanche,
+                                    Verre,
+                                    Marque,
+                                    Cadran,
+                                    Chiffres_du_cadran,
+                                    Couleur_du_bracelet,
+                                    Boucle,
+                                    Materiau_de_la_boucle,
+                                    Date_de_poste,
+                                    Date_de_modif,
+                                    Prix_initial
+                                    )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?);
     `;
     values.push(postDate);
-    values.push(saleDate);
+    values.push(updateDate);
+    values.push(initialPrice);
 
     return new Promise((resolve, reject) => {
         updatesDb.run(insertQuery, values, (err) => {
             if (err) {
-                console.log(c.red + '[-]' + c.reset + ' Error inserting sale');
+                console.log(c.red + '[-]' + c.reset + ' Error inserting update');
                 console.error(err.message);
             }
-            console.log(green + '[+]' + c.reset + ' Sale inserted successfully' + c.reset);
+            console.log(green + '[+]' + c.reset + ' update inserted successfully' + c.reset);
             resolve();
         });
     });
@@ -170,8 +173,8 @@ async function CompareAllTables() {
                     return;
                 }
 
-                await calculateSales(table.name, nextTable.name)
-                // await calculateUpdates(table.name, nextTable.name)
+                // await calculateSales(table.name, nextTable.name)
+                await calculateUpdates(table.name, nextTable.name)
             }
             resolve();
         });
@@ -198,7 +201,7 @@ async function calculateSales(startingDateTable, endingDateTable) {
 
     let count = 0;
     for (let row of rows) {
-        await insertSale(Object.values(row));
+        await insertSale(Object.values(row),formatDate(endingDateTable));
         count++;
     }
     console.log(c.green + count + c.reset + ' Sale successfully found and inserted while' + c.green + ' comparing ' + c.reset + startingDateTable + ' with ' + endingDateTable);
@@ -206,16 +209,18 @@ async function calculateSales(startingDateTable, endingDateTable) {
 }
 async function calculateUpdates(startingDateTable, endingDateTable) {
     const selectQuery = `
-        SELECT *
+        SELECT t1.*
         FROM ${startingDateTable} t1
-        WHERE NOT EXISTS (SELECT 1
-                          FROM ${endingDateTable} t2
-                          WHERE t1.Code_Annonce = t2.Code_Annonce);
+        WHERE t1.Code_annonce IN (
+            SELECT Code_annonce
+            FROM ${endingDateTable}
+        )
+        EXCEPT SELECT * from ${endingDateTable};
     `;
     const rows = await new Promise((resolve, reject) => {
         db.db.all(selectQuery, [], (err, rows) => {
             if (err) {
-                console.log(c.red + '[-]' + c.reset + ' Error fetching sales\n');
+                console.log(c.red + '[-]' + c.reset + ' Error fetching updates\n');
                 reject(err);
             }
             resolve(rows);
@@ -224,11 +229,29 @@ async function calculateUpdates(startingDateTable, endingDateTable) {
 
     let count = 0;
     for (let row of rows) {
-        await insertUpdate(Object.values(row));
+        let Updatedwatch = await getWatch(endingDateTable,row.Code_annonce);
+        await insertUpdate(Object.values(row),formatDate(endingDateTable),Updatedwatch.Prix);
         count++;
     }
-    console.log(c.green + count + c.reset + ' Sale successfully found and inserted while' + c.green + ' comparing ' + c.reset + startingDateTable + ' with ' + endingDateTable);
+    console.log(c.green + count + c.reset + ' Update successfully found and inserted while' + c.green + ' comparing ' + c.reset + startingDateTable + ' with ' + endingDateTable);
+}
 
+async function getWatch(tableName, codeAnnonce) {
+    const query = `
+        SELECT *
+        FROM ${tableName}
+        WHERE Code_annonce = ?;
+    `;
+
+    return new Promise((resolve, reject) => {
+        db.db.get(query, [codeAnnonce], (err, row) => {
+            if (err) {
+                console.log(c.red + '[-]' + c.reset + ' Error fetching watch');
+                reject(err);
+            }
+            resolve(row);
+        });
+    });
 }
 
 module.exports = {CompareAllTables};
