@@ -1,0 +1,126 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+}
+
+body {
+    background-color: #6c6c6c;
+}
+
+.navbar {
+    display: flex;
+    justify-content: flex-end;
+    height: max-content;
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 1.6rem;
+    font-family: "Roboto", sans-serif;
+}
+
+
+.right ul {
+    display: flex;
+    list-style-type: none;
+}
+
+
+.right li a {
+    text-decoration: none;
+    margin-inline: 1rem;
+    color: #ffffff;
+}
+
+.titleContainer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 2rem;
+    height: 80vh;
+}
+
+.titleContainer h1 {
+    font-size: 1.5rem;
+    font-family: "Roboto", sans-serif;
+    margin-bottom: 1rem;
+}
+
+.title {
+    display: flex;
+    margin-top: 10rem;
+    font-family: "Roboto", sans-serif;
+}
+
+.left-title, .right-title {
+    display: flex;
+    margin-inline: 2rem;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.left-title > h1, .right-title > h1 {
+    font-size: 5rem;
+    font-family: "Roboto", sans-serif;
+    margin-inline: .3rem;
+    transition-duration: 100ms;
+    transition: all 0.5s ease;
+    color: #ffffff;
+}
+.left-title > h1:hover, .right-title > h1:hover {
+    transition-duration: 100ms;
+    transform: TranslateY(-1.5rem);
+    cursor: default;
+}
+
+
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+    margin-inline: auto;
+    height: 80vh;
+    width: 95vw;
+    border: none;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.filter {
+    display: flex;
+    width:98%;
+    margin-inline: auto;
+    margin-top: 1rem;
+    justify-content: space-between;
+    height: 5rem;
+    border-radius: 5px;
+    background-color: whitesmoke;
+}
+
+.modal {
+    width:98%;
+    margin-inline: auto;
+    margin-top: 1rem;
+    min-height: 1rem;
+    border-radius: 6px;
+    background-color: blue;
+}
+
+
+.filter-price {
+    display: flex;
+    flex-direction: column;
+    margin-inline: 1rem;
+    margin-top: 1rem;
+    width: 20rem;
+    height: 3rem;
+}
+
+output {
+    margin-top: 1rem;
+    margin-inline: 1rem;
+    background-color: rgba(0, 0, 0, 0.1);
+    font-size: 1.2rem;
+    font-family: "Roboto", sans-serif;
+}
+
+
