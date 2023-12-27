@@ -13,39 +13,51 @@ const {updatesDb, salesDb} = require("./SalesAndUpdatesDbs");
 
 // turns 'Rolex_2021_1_1_1' into '2021_1_1_1:00'
 function formatDate(tableName) {
-    return tableName.split('_').slice(1) + ':00';
+    return (tableName.split('_').slice(1) + ':00');
 }
 
-function getPostDate(codeAnnonce) {
+async function getPostDate(codeAnnonce) {
     const query = "SELECT name FROM sqlite_master WHERE type='table';";
-    db.db.all(query, [], (err, tables) => {
-        if (err) {
-            console.log(c.red + '[-]' + c.reset + ' Error fetching watches');
-            console.error(err.message);
-        }
+    try {
+        const tables = await new Promise((resolve, reject) => {
+            db.db.all(query, [], (err, tables) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(tables);
+                }
+            });
+        });
+
         for (let table of tables) {
-            console.log("checking table " + table.name)
             const selectQuery = `SELECT *
                                  FROM ${table.name}
                                  WHERE Code_annonce = ?`;
-            db.db.get(selectQuery, [codeAnnonce], (err, row) => {
-                if (err) {
-                    console.log(c.red + '[-]' + c.reset + ' Error fetching watch date');
-                    console.error(err.message);
-                }
-                console.log(c.green + 'Nice!' + c.reset + ' Watch first found at ' + formatDate(table.name));
-                return formatDate(table.name);
+            const row = await new Promise((resolve, reject) => {
+                db.db.get(selectQuery, [codeAnnonce], (err, row) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(row);
+                    }
+                });
             });
-        }
-    });
-    return 'Not found';
 
+            if (row) {
+                return formatDate(table.name);
+            }
+        }
+    } catch (err) {
+        console.error(err.message);
+        console.log(c.red + '[-]' + c.reset + ' Error fetching data');
+    }
+
+    return 'Not found';
 }
 
 
-function insertSale(values, saleDate = formatDate(db.globalTableName)) {
-    const postDate = getPostDate(values[0]);
-    console.log(postDate)
+async function insertSale(values, saleDate = formatDate(db.globalTableName)) {
+    let postDate = await getPostDate(values[0]);
     const insertQuery = `
         INSERT INTO Global_sales (Code_annonce,
                                   Lien,
@@ -81,18 +93,69 @@ function insertSale(values, saleDate = formatDate(db.globalTableName)) {
     values.push(postDate);
     values.push(saleDate);
 
-    salesDb.run(insertQuery, values, (err) => {
-        if (err) {
-            console.log(c.red + '[-]' + c.reset + ' Error inserting sale');
-            console.error(err.message);
-            return;
-        }
-        console.log(green + '[+]' + c.reset + ' Sale inserted successfully' + c.reset);
+    return new Promise((resolve, reject) => {
+        salesDb.run(insertQuery, values, (err) => {
+            if (err) {
+                console.log(c.red + '[-]' + c.reset + ' Error inserting sale');
+                console.error(err.message);
+            }
+            console.log(green + '[+]' + c.reset + ' Sale inserted successfully' + c.reset);
+            resolve();
+        });
+    });
+
+}
+async function insertUpdate(values, saleDate = formatDate(db.globalTableName)) {
+    let postDate = await getPostDate(values[0]);
+    const insertQuery = `
+        INSERT INTO Global_sales (Code_annonce,
+                                  Lien,
+                                  Modele,
+                                  Prix,
+                                  Etat,
+                                  Annee_de_fabrication,
+                                  Materiau_de_la_lunette,
+                                  Numero_de_reference,
+                                  Mouvement,
+                                  Boitier,
+                                  Matiere_du_bracelet,
+                                  Contenu_livre,
+                                  Sexe,
+                                  Emplacement,
+                                  Disponibilite,
+                                  Calibre_Rouages,
+                                  Reserve_de_marche,
+                                  Nombre_de_pierres,
+                                  Diametre,
+                                  Etanche,
+                                  Verre,
+                                  Marque,
+                                  Cadran,
+                                  Chiffres_du_cadran,
+                                  Couleur_du_bracelet,
+                                  Boucle,
+                                  Materiau_de_la_boucle,
+                                  Date_de_poste,
+                                  Date_de_vente)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    `;
+    values.push(postDate);
+    values.push(saleDate);
+
+    return new Promise((resolve, reject) => {
+        updatesDb.run(insertQuery, values, (err) => {
+            if (err) {
+                console.log(c.red + '[-]' + c.reset + ' Error inserting sale');
+                console.error(err.message);
+            }
+            console.log(green + '[+]' + c.reset + ' Sale inserted successfully' + c.reset);
+            resolve();
+        });
     });
 
 }
 
-const CompareAllTables = async () => {
+async function CompareAllTables() {
     return new Promise((resolve, reject) => {
         const query = "SELECT name FROM sqlite_master WHERE type='table';";
         db.db.all(query, [], async (err, tables) => {
@@ -106,68 +169,66 @@ const CompareAllTables = async () => {
                 if (nextTable === undefined) {
                     return;
                 }
-                console.log(c.green + ' Comparing '
-                    + c.reset + table.name + ' with ' + nextTable.name
-                )
+
                 await calculateSales(table.name, nextTable.name)
+                // await calculateUpdates(table.name, nextTable.name)
             }
             resolve();
         });
     });
 }
 
-async function CompareLastTables() {
 
-}
-
-const calculateSales = async (startingDateTable, endingDateTable) => {
-    let count = 0;
+async function calculateSales(startingDateTable, endingDateTable) {
     const selectQuery = `
         SELECT *
         FROM ${startingDateTable}
         WHERE Code_Annonce NOT IN (SELECT Code_Annonce FROM ${endingDateTable});
     `;
-    db.db.all(selectQuery, [], (err, rows) => {
-        if (err) {
-            console.log(c.red + '[-]' + c.reset + ' Error fetching sales\n');
-        }
-        for (const row of rows) {
-            count++;
-            insertSale(Object.values(row), formatDate(endingDateTable));
-        }
+
+    const rows = await new Promise((resolve, reject) => {
+        db.db.all(selectQuery, [], (err, rows) => {
+            if (err) {
+                console.log(c.red + '[-]' + c.reset + ' Error fetching sales\n');
+                reject(err);
+            }
+            resolve(rows);
+        });
     });
-    console.log(c.green + count + c.reset + ' Sale found successfully');
+
+    let count = 0;
+    for (let row of rows) {
+        await insertSale(Object.values(row));
+        count++;
+    }
+    console.log(c.green + count + c.reset + ' Sale successfully found and inserted while' + c.green + ' comparing ' + c.reset + startingDateTable + ' with ' + endingDateTable);
+
 }
+async function calculateUpdates(startingDateTable, endingDateTable) {
+    const selectQuery = `
+        SELECT *
+        FROM ${startingDateTable} t1
+        WHERE NOT EXISTS (SELECT 1
+                          FROM ${endingDateTable} t2
+                          WHERE t1.Code_Annonce = t2.Code_Annonce);
+    `;
+    const rows = await new Promise((resolve, reject) => {
+        db.db.all(selectQuery, [], (err, rows) => {
+            if (err) {
+                console.log(c.red + '[-]' + c.reset + ' Error fetching sales\n');
+                reject(err);
+            }
+            resolve(rows);
+        });
+    });
 
+    let count = 0;
+    for (let row of rows) {
+        await insertUpdate(Object.values(row));
+        count++;
+    }
+    console.log(c.green + count + c.reset + ' Sale successfully found and inserted while' + c.green + ' comparing ' + c.reset + startingDateTable + ' with ' + endingDateTable);
 
-// async function calculateUpdates(startingDate, endingDate) {
-//     await salesUpdatesDb.updatesDb.openDB(startingDate, endingDate);
-//     const startingDateTable = `Rolex_${startingDate}`;
-//     const endingDateTable = `Rolex_${endingDate}`;
-//     const tableName = `Updates_${startingDate}_${endingDate}`;
-//     return new Promise((resolve, reject) => {
-//         const selectQuery = `
-//             SELECT *
-//             FROM ${startingDateTable} t1
-//             WHERE NOT EXISTS (SELECT 1
-//                               FROM ${endingDateTable} t2
-//                               WHERE t1.Code_Annonce = t2.Code_Annonce);
-//         `;
-//
-//         db.db.all(selectQuery, [], (err, rows) => {
-//             if (err) {
-//                 console.log(c.red + '[-]' + c.reset + ' Error fetching watches');
-//                 console.error(err.message);
-//                 reject(err);
-//             }
-//
-//             for (let row of rows) {
-//                 resolve(salesUpdatesDb.updatesDb.InsertIntoDb(Object.values(row), tableName));
-//                 console.log(c.green + '[+]' + c.reset + ' Fetched all sold watches successfully');
-//             }
-//         });
-//
-//     });
-// }
+}
 
 module.exports = {CompareAllTables};

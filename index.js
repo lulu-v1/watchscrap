@@ -6,8 +6,9 @@ const salesDbHandler = require('./DbManagement/SalesUpdatesDbManagement/SalesAnd
 
 async function main() {
     console.time('timer')
-    // await db.openDB();
-    salesDb.createSalesUpdatesTable();
+    await db.openDB();
+    await crawlerModule.CrawlOverModels();
+    await salesDb.createSalesUpdatesTable();
     await salesDbHandler.CompareAllTables();
 
 

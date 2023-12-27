@@ -55,7 +55,8 @@ function createSalesUpdatesTable() {
             Boucle                 TEXT,
             Materiau_de_la_boucle  TEXT,
             Date_de_poste TEXT,
-            Date_de_vente TEXT    
+            Date_de_vente TEXT,
+            Ancien_prix INT    
         );
     `;
     const createUpdateTableQuery = `
