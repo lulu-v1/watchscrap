@@ -39,7 +39,7 @@ async function GetAllWatchesLink() {
  * Scrapes the given page URL.
  * @param {string} currentUrl - The URL to scrape.
  * @param {Object} browser - Puppeteer browser instance.
- */
+ **/
 async function scrapeUrl({ currentUrl, browser }) {
     console.log(`\nScraping current Page: ${currentUrl}\n`);
     let page = await browser.newPage();

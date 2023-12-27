@@ -60,27 +60,27 @@ async function insertSale(values, saleDate = formatDate(db.globalTableName)) {
     let postDate = await getPostDate(values[0]);
     const insertQuery = `
         INSERT INTO Global_sales (Code_annonce,
+                                  Marque,
                                   Lien,
                                   Modele,
-                                  Prix,
-                                  Etat,
-                                  Annee_de_fabrication,
-                                  Materiau_de_la_lunette,
                                   Numero_de_reference,
                                   Mouvement,
                                   Boitier,
                                   Matiere_du_bracelet,
+                                  Annee_de_fabrication,
+                                  Etat,
                                   Contenu_livre,
                                   Sexe,
                                   Emplacement,
+                                  Prix,
                                   Disponibilite,
                                   Calibre_Rouages,
                                   Reserve_de_marche,
                                   Nombre_de_pierres,
                                   Diametre,
                                   Etanche,
+                                  Materiau_de_la_lunette,
                                   Verre,
-                                  Marque,
                                   Cadran,
                                   Chiffres_du_cadran,
                                   Couleur_du_bracelet,
@@ -108,28 +108,28 @@ async function insertSale(values, saleDate = formatDate(db.globalTableName)) {
 async function insertUpdate(values, updateDate = formatDate(db.globalTableName),initialPrice) {
     let postDate = await getPostDate(values[0]);
     const insertQuery = `
-        INSERT INTO Global_updates (Code_annonce,
+        INSERT OR REPLACE INTO Global_updates (Code_annonce,
+                                    Marque,
                                     Lien,
                                     Modele,
-                                    Prix,
-                                    Etat,
-                                    Annee_de_fabrication,
-                                    Materiau_de_la_lunette,
                                     Numero_de_reference,
                                     Mouvement,
                                     Boitier,
                                     Matiere_du_bracelet,
+                                    Annee_de_fabrication,
+                                    Etat,
                                     Contenu_livre,
                                     Sexe,
                                     Emplacement,
+                                    Prix,
                                     Disponibilite,
                                     Calibre_Rouages,
                                     Reserve_de_marche,
                                     Nombre_de_pierres,
                                     Diametre,
                                     Etanche,
+                                    Materiau_de_la_lunette,
                                     Verre,
-                                    Marque,
                                     Cadran,
                                     Chiffres_du_cadran,
                                     Couleur_du_bracelet,
@@ -138,8 +138,8 @@ async function insertUpdate(values, updateDate = formatDate(db.globalTableName),
                                     Date_de_poste,
                                     Date_de_modif,
                                     Prix_initial
-                                    )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?);
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     `;
     values.push(postDate);
     values.push(updateDate);
@@ -173,7 +173,7 @@ async function CompareAllTables() {
                     return;
                 }
 
-                // await calculateSales(table.name, nextTable.name)
+                await calculateSales(table.name, nextTable.name)
                 await calculateUpdates(table.name, nextTable.name)
             }
             resolve();
@@ -254,4 +254,4 @@ async function getWatch(tableName, codeAnnonce) {
     });
 }
 
-module.exports = {CompareAllTables};
+module.exports = {CompareAllTables, insertUpdate};
