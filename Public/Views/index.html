@@ -1,62 +1,85 @@
 <!doctype html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WatchScrapper</title>
     <link rel="stylesheet" href="/Style/styles.css">
-    <title>Document</title>
+    <link rel="icon" type="image/x-icon" href="/Images/sablier.png">
 </head>
-
-<body>
-
 <header>
     <div class="navbar">
+        <div class="left">
+            <div class="logo">
+                <img src="/Images/sablier.png" alt="logo">
+            </div>
+        </div>
         <div class="right">
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About us</a></li>
-                <li><a href="#">Contact us</a></li>
-            </ul>
+            <a href="/" class="active">Home</a>
+            <a href="/watches">Watches</a>
+            <a href="/Views/About">About</a>
+            <a href="/Views/Contact">Contact</a>
+            <a href="/Views/Account">Account</a>
         </div>
     </div>
 </header>
-
-<div class="titleContainer">
-    <div class="title">
-        <div class="left-title">
-            <h1>W</h1>
-            <h1>A</h1>
-            <h1>T</h1>
-            <h1>C</h1>
-            <h1>H</h1>
+<body>
+<div class="main-container">
+    <div class="graph-container">
+        <div class="graph">
+            <div class="graph-title">
+                <h1>Most blablabla</h1>
+            </div>
+            <div class="graph-content">
+                <div class="watches-name">Rolex</div>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam assumenda blanditiis consequatur
+                    enim esse ex hic ipsam iusto laboriosam magnam natus nobis odio porro quia, quis sapiente tempora
+                    ullam voluptas.</p>
+                <div class="button-container">
+                    <button class="button">Discover More</button>
+                </div>
+            </div>
         </div>
-        <div class="right-title">
-            <h1>S</h1>
-            <h1>C</h1>
-            <h1>R</h1>
-            <h1>A</h1>
-            <h1>P</h1>
-            <h1>P</h1>
-            <h1>E</h1>
-            <h1>R</h1>
+        <div class="graph">
+            <div class="graph-title">
+                <h1>Most blablabla</h1>
+            </div>
+            <div class="graph-content">
+                <div class="watches-name">Rolex</div>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam assumenda blanditiis consequatur
+                    enim esse ex hic ipsam iusto laboriosam magnam natus nobis odio porro quia, quis sapiente tempora
+                    ullam voluptas.</p>
+                <div class="button-container">
+                    <button class="button">Discover More</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="watches-container">
+        <div class="watches-left">
+            <div class="info-title"><h1>Watch name</h1></div>
+            <div class="info-content">This Display the current state of the EURUSD CHART TO dasdasdasdasd oijioj oij
+                oioij oo joi ji isodjas ijoi joi
+            </div>
+        </div>
+        <div class="watches-right">
+            <div class="info-title"><h1>Current States</h1></div>
+            <div class="info-content">This Display the current state of the EURUSD CHART TO dasdasdasdasd oijioj oij oioij oo joi ji isodjas ijoi joi</div>
+
+            <!-- Watch stats -->
+            <div class="watch-stats"><div class="watch-title">Watch name</div><div class="watch-percentage">25.5%</div></div>
+            <div class="watch-stats"><div class="watch-title">Watch name</div><div class="watch-percentage">12.5%</div></div>
+            <div class="watch-stats"><div class="watch-title">Watch name</div><div class="watch-percentage">57.5%</div></div>
+            <div class="watch-stats"><div class="watch-title">Watch name</div><div class="watch-percentage">23.5%</div></div>
+            <div class="watch-stats"><div class="watch-title">Watch name</div><div class="watch-percentage">12.5%</div></div>
         </div>
     </div>
 </div>
+<div class="recent-watches">
 
-<div class="mainContainer">
-    <div class="filter">
-        <div class="filter-price">
-            <label for="price"></label>
-            <input type="range" min="0" max="200000" id="price" name="price" placeholder="Filter" oninput="this.nextElementSibling.value = this.value">
-            <output></output>
-        </div>
-
-    </div>
-    <div class="modal"></div>
 </div>
-
 </body>
-
 </html>

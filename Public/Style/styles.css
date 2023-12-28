@@ -1,126 +1,233 @@
 * {
     margin: 0;
     padding: 0;
-    border: 0;
-    font-size: 100%;
-    vertical-align: baseline;
+    box-sizing: border-box;
+    --dark: #1E201E;
 }
 
-body {
-    background-color: #6c6c6c;
+html {
+    background-color: #EBF1F1;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-left: 1rem;
+    height: 3rem;
 }
 
 .navbar {
     display: flex;
-    justify-content: flex-end;
-    height: max-content;
-    background-color: rgba(0, 0, 0, 0.1);
-    padding: 1.6rem;
-    font-family: "Roboto", sans-serif;
-}
-
-
-.right ul {
-    display: flex;
-    list-style-type: none;
-}
-
-
-.right li a {
-    text-decoration: none;
-    margin-inline: 1rem;
-    color: #ffffff;
-}
-
-.titleContainer {
-    display: flex;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    justify-content: space-between;
     align-items: center;
-    flex-direction: column;
-    margin-top: 2rem;
-    height: 80vh;
+    height: 4rem;
+    gap: 30px;
+    background-color: #EBF1F1FF;
+    border-bottom: 1px solid #000;
 }
 
-.titleContainer h1 {
+
+
+.navbar a {
+    text-decoration: none;
+    color: #000;
+    font-size: 1.2rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.navbar a:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+
+
+.logo {
+    display: flex;
     font-size: 1.5rem;
-    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    margin-left: 1rem;
+}
+
+.right {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-right: 3rem;
+}
+
+
+.main-container {
+    display: flex;
+    margin-top: 3rem;
+    justify-content: space-between;
+    height: 80vh;
+    color: white;
+}
+
+.graph-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 5rem;
+    width: 50%;
+}
+
+.graph {
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+    height: 40rem;
+    color: var(--dark);
+}
+
+
+.graph-title h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 1rem;
+    margin-left: .5rem;
+}
+
+.watches-name {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    margin-top: 3rem;
+    background-color: var(--dark);
+    width: 60%;
+    height: 4.5rem;
+    border-radius: 0 50px 50px 0px;;
+}
+
+.graph-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 25rem;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    border: var(--dark) 1px solid;
+}
+
+
+.graph-content p {
+    margin-inline : 2rem;
+    color: var(--dark);
+    margin-top: 2rem;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 2rem;
+}
+
+.button {
+    width: 80%;
+    height: 3rem;
+    border-radius: 50px;
+    background-color: var(--dark);
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.button:hover {
+    background-color: #efefef;
+    color: var(--dark);
+}
+
+
+
+.watches-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 40%;
+    background-color: var(--dark);
+    border-radius: 20px;
+    height: 40rem;
+    margin-right: 3rem;
+    margin-top: 5rem;
+}
+
+.watches-right, .watches-left {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin-top: 3rem;
+}
+
+.info-title h1 {
+    display: flex;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
     margin-bottom: 1rem;
 }
 
-.title {
-    display: flex;
-    margin-top: 10rem;
-    font-family: "Roboto", sans-serif;
+.watches-left {
+    border-right: white 1px solid;
 }
 
-.left-title, .right-title {
-    display: flex;
-    margin-inline: 2rem;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+.watches-left > * {
+    margin-left: 2rem;
 }
 
-.left-title > h1, .right-title > h1 {
-    font-size: 5rem;
-    font-family: "Roboto", sans-serif;
-    margin-inline: .3rem;
-    transition-duration: 100ms;
-    transition: all 0.5s ease;
-    color: #ffffff;
-}
-.left-title > h1:hover, .right-title > h1:hover {
-    transition-duration: 100ms;
-    transform: TranslateY(-1.5rem);
-    cursor: default;
-}
-
-
-.mainContainer {
-    display: flex;
-    flex-direction: column;
+.info-content {
     margin-top: 2rem;
-    margin-inline: auto;
-    height: 80vh;
-    width: 95vw;
-    border: none;
-    border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+    font-weight: 300;
+    width: 80%;
+    margin-left: 1rem;
 }
 
-.filter {
+
+.watch-stats {
     display: flex;
-    width:98%;
-    margin-inline: auto;
-    margin-top: 1rem;
-    justify-content: space-between;
-    height: 5rem;
-    border-radius: 5px;
-    background-color: whitesmoke;
-}
-
-.modal {
-    width:98%;
-    margin-inline: auto;
-    margin-top: 1rem;
-    min-height: 1rem;
-    border-radius: 6px;
-    background-color: blue;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 3rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin-top: 2rem;
+    border: var(--dark) 1px solid;
 }
 
 
-.filter-price {
+
+
+.watch-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    margin-left: 1rem;
+    border-right: #CBC8C2 1px solid;
+    padding-right: 4rem;
+}
+
+.filter-watches-container {
     display: flex;
     flex-direction: column;
-    margin-inline: 1rem;
-    margin-top: 1rem;
-    width: 20rem;
-    height: 3rem;
+    justify-content: space-around;
+    width: 100%;
+    height: max-content;
+    margin-top: 2rem;
 }
-
-output {
-    margin-top: 1rem;
-    margin-inline: 1rem;
-    background-color: rgba(0, 0, 0, 0.1);
-    font-size: 1.2rem;
-    font-family: "Roboto", sans-serif;
-}
-
-

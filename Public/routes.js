@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const { RetrieveAllWatches, RetrieveAllFromSpecificDB, RetrieveSpecificWatch, RetrieveFromSpecificDB} = require("../Api/watches");
+
 router.get(`/`, async function (req, res) {
     const result = await RetrieveAllWatches();
     res.status(200).send(result);
