@@ -2,8 +2,7 @@ const puppeteer = require('puppeteer');
 const GetWatchPagesURLs = require("./GetWatchPagesURLs");
 const getWatchStats = require("./getWatchStats");
 const { globalTableName, db} = require("../DbManagement/MainDbManagement/Db");
-const dbHandler= require("../DbManagement/MainDbManagement/DbHandler");
-const {getNumberOfWatchesInDB} = require("../DbManagement/MainDbManagement/DbHandler");
+const { getNumberOfWatches } = require("../DbManagement/MainDbManagement/DbHandler");
 
 /**
  * Fetches the total number of Watches link to be scraped.
@@ -14,7 +13,7 @@ async function GetAllWatchesLink() {
     let pageNumberIndex = 1;
     let WatchesUrlLink = [];
     let totalNumberWatches = await GetTotalNumberOfWatches();
-    let WatchesinDB = await dbHandler.getNumberOfWatchesInDB(db.globalTableName);
+    let WatchesinDB = await getNumberOfWatches(db.globalTableName);
     while (WatchesUrlLink.length < totalNumberWatches - WatchesinDB) {
         const pageNumber = `&showpage=${pageNumberIndex}`;
         const currentUrl = `https://www.chrono24.fr/search/index.htm?currencyId=EUR&dosearch=true&manufacturerIds=221&maxAgeInDays=0&pageSize=120&redirectToSearchIndex=true&resultview=block&sellerType=PrivateSeller${pageNumber}&sortorder=0&countryIds=FR`;
