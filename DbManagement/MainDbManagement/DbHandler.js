@@ -83,6 +83,24 @@ function getAllWatches(callback) {
     });
 }
 
+async function getWatch(tableName,codeAnnonce) {
+    const selectQuery = `SELECT *
+                         FROM ${tableName}
+                         WHERE Code_annonce = ?`;
+
+    return new Promise((resolve, reject) => {
+        db.db.get(selectQuery, [codeAnnonce], (err, row) => {
+            if (err) {
+                console.log(c.red + '[-]' + c.reset + ' Error fetching watch');
+                console.error(err.message);
+                return reject(err);
+            }
+            console.log(c.green + '[+]' + c.reset + ' Fetched watch successfully' + c.reset);
+            resolve(row);
+        });
+    });
+}
+
 function deleteWatchById(id, callback) {
     const deleteQuery = `DELETE
                          FROM ${db.globalTableName}
@@ -98,5 +116,24 @@ function deleteWatchById(id, callback) {
         callback(null);
     });
 }
+function getLastTable() {
+const selectQuery = `SELECT name
+                         FROM sqlite_master
+                         WHERE type = 'table'
+                         ORDER BY name DESC
+                         LIMIT 1;`;
 
-module.exports = {insertWatch, getAllWatches, getNumberOfWatches: getNumberOfWatchesInDB, checkIfLinkExists: checkIfLinkExists}
+    return new Promise((resolve, reject) => {
+        db.db.get(selectQuery, [], (err, row) => {
+            if (err) {
+                console.log(c.red + '[-]' + c.reset + ' Error fetching last table');
+                console.error(err.message);
+                return reject(err);
+            }
+            console.log(c.green + '[+]' + c.reset + ' Fetched last table successfully' + c.reset);
+            resolve(row.name);
+        });
+    });
+}
+
+module.exports = {insertWatch, getWatch,  getNumberOfWatchesInDB, checkIfLinkExists, getLastTable, getAllWatches, deleteWatchById}

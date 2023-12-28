@@ -2,7 +2,8 @@ const puppeteer = require('puppeteer');
 const GetWatchPagesURLs = require("./GetWatchPagesURLs");
 const getWatchStats = require("./getWatchStats");
 const { globalTableName, db} = require("../DbManagement/MainDbManagement/Db");
-const { getNumberOfWatches } = require("../DbManagement/MainDbManagement/DbHandler");
+const dbHandler= require("../DbManagement/MainDbManagement/DbHandler");
+const {getNumberOfWatchesInDB} = require("../DbManagement/MainDbManagement/DbHandler");
 
 /**
  * Fetches the total number of Watches link to be scraped.
@@ -13,7 +14,7 @@ async function GetAllWatchesLink() {
     let pageNumberIndex = 1;
     let WatchesUrlLink = [];
     let totalNumberWatches = await GetTotalNumberOfWatches();
-    let WatchesinDB = await getNumberOfWatches(db.globalTableName);
+    let WatchesinDB = await dbHandler.getNumberOfWatchesInDB(db.globalTableName);
     while (WatchesUrlLink.length < totalNumberWatches - WatchesinDB) {
         const pageNumber = `&showpage=${pageNumberIndex}`;
         const currentUrl = `https://www.chrono24.fr/search/index.htm?currencyId=EUR&dosearch=true&manufacturerIds=221&maxAgeInDays=0&pageSize=120&redirectToSearchIndex=true&resultview=block&sellerType=PrivateSeller${pageNumber}&sortorder=0&countryIds=FR`;
@@ -27,7 +28,7 @@ async function GetAllWatchesLink() {
         }
         console.log(`Page ${pageNumberIndex} done. Total number of links: ${WatchesUrlLink.length}`)
 
-        pageNumberIndex = (pageNumberIndex % 6) + 1; // Reset after 6 pages
+        pageNumberIndex = (pageNumberIndex % 7) + 1; // Reset after 6 pages
     }
 
     await browser.close();
@@ -39,7 +40,7 @@ async function GetAllWatchesLink() {
  * Scrapes the given page URL.
  * @param {string} currentUrl - The URL to scrape.
  * @param {Object} browser - Puppeteer browser instance.
- */
+ **/
 async function scrapeUrl({ currentUrl, browser }) {
     console.log(`\nScraping current Page: ${currentUrl}\n`);
     let page = await browser.newPage();
@@ -77,7 +78,7 @@ async function CrawlOverModels() {
     console.log(`Total number of watches: ${totalWatches}`);
     console.log(`Total number of Links to scrape: ${AllWatchesLinks.length}`);
 
-    let watchesInDb = await getNumberOfWatches(globalTableName);
+    let watchesInDb = await getNumberOfWatchesInDB(globalTableName);
     console.log(`Watches in DB: ${watchesInDb}`);
 
     const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'] });
@@ -86,7 +87,7 @@ async function CrawlOverModels() {
     // Divide AllWatchesLinks into chunks of 60 links each
     const linkChunks = [];
 
-    const chunkSize = 150; // number of links per chunk
+    const chunkSize = 75; // number of links per chunk
 
     for (let i = 0; i < AllWatchesLinks.length; i += chunkSize) {
         linkChunks.push(AllWatchesLinks.slice(i, i + chunkSize));
@@ -101,7 +102,7 @@ async function CrawlOverModels() {
             }
 
             await Promise.all(promises);
-            watchesInDb = await getNumberOfWatches(globalTableName);
+            watchesInDb = await getNumberOfWatchesInDB(globalTableName);
             if (watchesInDb >= totalWatches) { // don't process the next chunk if we have all the watches
                 break;
             }
