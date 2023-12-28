@@ -116,5 +116,24 @@ function deleteWatchById(id, callback) {
         callback(null);
     });
 }
+function getLastTable() {
+const selectQuery = `SELECT name
+                         FROM sqlite_master
+                         WHERE type = 'table'
+                         ORDER BY name DESC
+                         LIMIT 1;`;
 
-module.exports = {insertWatch, getWatch , getNumberOfWatches: getNumberOfWatchesInDB, checkIfLinkExists: checkIfLinkExists}
+    return new Promise((resolve, reject) => {
+        db.db.get(selectQuery, [], (err, row) => {
+            if (err) {
+                console.log(c.red + '[-]' + c.reset + ' Error fetching last table');
+                console.error(err.message);
+                return reject(err);
+            }
+            console.log(c.green + '[+]' + c.reset + ' Fetched last table successfully' + c.reset);
+            resolve(row.name);
+        });
+    });
+}
+
+module.exports = {insertWatch, getWatch,  getNumberOfWatchesInDB, checkIfLinkExists, getLastTable, getAllWatches, deleteWatchById}
