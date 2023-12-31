@@ -5,7 +5,9 @@ const processWatch = require("./ProcessWatchData").processWatch;
 
 async function checkIfLinkExists(lien) {
     const globalTableName = db.globalTableName;
-    const query = `SELECT * FROM ${globalTableName} WHERE Lien = ?`;
+    const query = `SELECT *
+                   FROM ${globalTableName}
+                   WHERE Lien = ?`;
 
     return new Promise((resolve, reject) => {
         db.db.get(query, [lien], (err, row) => {
@@ -13,6 +15,24 @@ async function checkIfLinkExists(lien) {
                 reject(err);
             } else {
                 resolve(!!row);
+            }
+        });
+    });
+}
+
+async function getLastTable() {
+    const query = `SELECT name
+                   FROM sqlite_master
+                   WHERE type = 'table'
+                   ORDER BY name DESC
+                   LIMIT 1;`;
+
+    return new Promise((resolve, reject) => {
+        db.db.get(query, [], (err, row) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(row.name);
             }
         });
     });
@@ -99,4 +119,9 @@ function deleteWatchById(id, callback) {
     });
 }
 
-module.exports = {insertWatch, getAllWatches, getNumberOfWatches: getNumberOfWatchesInDB, checkIfLinkExists: checkIfLinkExists}
+module.exports = {
+    insertWatch,
+    getAllWatches,
+    checkIfLinkExists,
+    getLastTable,
+}
