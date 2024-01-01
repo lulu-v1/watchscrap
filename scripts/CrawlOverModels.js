@@ -27,7 +27,7 @@ async function GetAllWatchesLink() {
         }
         console.log(`Page ${pageNumberIndex} done. Total number of links: ${WatchesUrlLink.length}`)
 
-        pageNumberIndex = (pageNumberIndex % 7) + 1; // Reset after 6 pages
+        pageNumberIndex = (pageNumberIndex % 8) + 1; // Reset after 6 pages
     }
 
     await browser.close();
